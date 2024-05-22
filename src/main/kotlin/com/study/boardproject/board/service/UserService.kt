@@ -1,0 +1,18 @@
+package com.study.boardproject.board.service
+
+import com.study.boardproject.board.dto.request.UserRequestDto
+import com.study.boardproject.board.dto.response.UserResponseDto
+import com.study.boardproject.board.entity.User
+import com.study.boardproject.board.repository.UserRepository
+import org.springframework.stereotype.Service
+
+@Service
+class UserService(val userRepository: UserRepository) {
+    fun findUserByEmail(email: String): User = userRepository.findByEmail(email)
+        .orElseThrow { IllegalArgumentException("") };
+
+    fun save(requestDto: UserRequestDto) : UserResponseDto{
+        val user = userRepository.save(User(requestDto))
+        return UserResponseDto(user.email, user.name)
+    }
+}
