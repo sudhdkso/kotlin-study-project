@@ -14,7 +14,7 @@ annotation class ValidEnum(
     val message: String = "Invalid enum value",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = [],
-    val enumClass: KClass<out Enum<*>> // specify the enum class to be validated
+    val enumClass: KClass<out Enum<*>>
 )
 
 class ValidEnumValidator : ConstraintValidator<ValidEnum, Any> {
