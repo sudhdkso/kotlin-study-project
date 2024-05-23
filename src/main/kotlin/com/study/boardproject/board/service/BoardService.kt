@@ -59,6 +59,16 @@ class BoardService(
     //삭제
     fun deleteByBoardId(boardId: Long) = boardRepository.deleteById(boardId)
 
+    fun search(query: String) : List<BoardResponseDto> {
+        val boardResponseList: MutableList<BoardResponseDto>  = mutableListOf()
+
+        for(board in boardRepository.searchByTitleOrContent(query)) {
+            boardResponseList.add(convertBoardToBoardResponse(board))
+        }
+
+        return boardResponseList.toList()
+    }
+
     fun viewCountup(boardId: Long) {
         val board = findByBoardId(boardId)
         board.viewCountUp()
