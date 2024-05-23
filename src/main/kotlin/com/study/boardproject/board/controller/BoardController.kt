@@ -7,15 +7,18 @@ import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
+import jakarta.validation.constraints.Size
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/board")
 @RestController
+@Validated
 class BoardController(val boardService: BoardService) {
     @PostMapping
     fun create(@RequestBody @Valid requestDto: BoardRequestDto) : ResponseEntity<BoardResponseDto>{
@@ -38,6 +41,17 @@ class BoardController(val boardService: BoardService) {
         val sortCriteria = SortCriteria.findSortCriteria(sort)
         val sortedPageable = PageRequest.of(pageable.pageNumber, pageable.pageSize, Sort.by(Sort.Order.desc(sortCriteria.sortProperty)))
         val responseList = boardService.findAll(sortedPageable)
+        return ResponseEntity.ok().body(responseList)
+    }
+
+    @GetMapping("/search")
+    fun search(
+
+        @RequestParam("query")
+        @Size(min = 2, max = 50, message = "The length of the query must be 1 to 50")
+        query:String
+    ) : ResponseEntity<List<BoardResponseDto>> {
+        val responseList = boardService.search(query)
         return ResponseEntity.ok().body(responseList)
     }
 
