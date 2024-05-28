@@ -4,11 +4,11 @@ import com.study.boardproject.board.createBoard
 import com.study.boardproject.board.createBoardRequest
 import com.study.boardproject.board.createUser
 import com.study.boardproject.board.repository.BoardRepository
+import com.study.boardproject.board.repository.getByBoardId
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
 import jakarta.validation.Validator
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
@@ -55,6 +55,60 @@ class BoardServiceTest : BehaviorSpec({
             Then("예외를 반환한다."){
                 shouldThrow<IllegalArgumentException> {
                     boardService.save(request)
+                }
+            }
+        }
+    }
+
+    Given("게시글이 유효한 경우"){
+
+        val title = "수정"
+        val request = createBoardRequest(title = title)
+        val boardId = 1L;
+
+        every { boardRepository.save(any()) } returns createBoard(title = title)
+        every { boardService.findByBoardId(any()) } returns createBoard()
+        every { boardRepository.delete(any()) } just runs
+
+
+        When("수정하면"){
+            val actual = boardService.update(boardId, request)
+            Then("성공한다."){
+                actual.title shouldBe title
+            }
+        }
+
+        When("삭제하면"){
+            boardService.deleteByBoardId(boardId)
+            Then("성공한다."){
+                verify(exactly = 1) { boardRepository.delete(any()) }
+            }
+        }
+    }
+
+    Given("존재하지 않는 게시글을"){
+        val title = "수정"
+        val boardId = 1L;
+        val request = createBoardRequest(title = title)
+        every { boardRepository.getByBoardId(any()) } throws NoSuchElementException()
+        When("조회하려고 하면"){
+            Then("예외를 반환한다."){
+                shouldThrow<NoSuchElementException> {
+                    boardService.findByBoardId(boardId)
+                }
+            }
+        }
+        When("수정하려고 하면"){
+            Then("예외를 반환한다."){
+                shouldThrow<NoSuchElementException> {
+                    boardService.update(boardId, request)
+                }
+            }
+        }
+        When("삭제하려고 하면"){
+            Then("예외를 반환한다."){
+                shouldThrow<NoSuchElementException> {
+                    boardService.deleteByBoardId(boardId)
                 }
             }
         }

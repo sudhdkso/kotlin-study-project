@@ -50,12 +50,15 @@ class BoardService(
 
         validateRequest(requestDto)
         board.update(requestDto)
-
-        return convertBoardToBoardResponse(boardRepository.save(board))
+        val savedBoard = boardRepository.save(board)
+        return convertBoardToBoardResponse(savedBoard)
     }
 
     //삭제
-    fun deleteByBoardId(boardId: Long) = boardRepository.deleteById(boardId)
+    fun deleteByBoardId(boardId: Long){
+        val board = findByBoardId(boardId)
+        boardRepository.delete(board)
+    }
 
     fun search(query: String) : List<BoardResponseDto> {
         val boardResponseList: MutableList<BoardResponseDto>  = mutableListOf()
