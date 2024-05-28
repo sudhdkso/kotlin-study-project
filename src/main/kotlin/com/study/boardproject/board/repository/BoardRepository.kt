@@ -5,6 +5,7 @@ import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.entity.QBoard
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 interface BoardRepositoryCustom {
@@ -25,6 +26,9 @@ class BoardRepositoryImpl(
     }
 }
 
+fun BoardRepository.getByBoardId(id: Long) : Board{
+    return findByIdOrNull(id) ?: throw NoSuchElementException()
+}
 
 interface BoardRepository : JpaRepository<Board, Long>,BoardRepositoryCustom{
     fun save(board: Board) : Board

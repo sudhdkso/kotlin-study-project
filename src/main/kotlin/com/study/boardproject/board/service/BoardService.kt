@@ -4,6 +4,7 @@ import com.study.boardproject.board.dto.request.BoardRequestDto
 import com.study.boardproject.board.dto.response.BoardResponseDto
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.repository.BoardRepository
+import com.study.boardproject.board.repository.getByBoardId
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
@@ -21,11 +22,7 @@ class BoardService(
         return BoardResponseDto(boardRepository.save(board), user)
     }
 
-    fun findByBoardId(boardId: Long): Board = boardRepository.findById(boardId)
-        .orElseThrow {
-            IllegalArgumentException("")
-        }
-
+    fun findByBoardId(boardId: Long): Board = boardRepository.getByBoardId(boardId)
 
     //게시글 개별 조회
     fun findOne(boardId: Long): BoardResponseDto {
@@ -48,8 +45,7 @@ class BoardService(
     fun update(boardId: Long, requestDto: BoardRequestDto): BoardResponseDto {
         val user = userService.findUserByEmail(requestDto.email)
 
-        val board = boardRepository.findById(boardId)
-            .orElseThrow { IllegalArgumentException("") };
+        val board = findByBoardId(boardId)
 
         board.update(requestDto)
 
