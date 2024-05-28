@@ -73,11 +73,11 @@ class Board(title: String, content: String, writer: User) : BaseEntity() {
 abstract class BaseEntity{
     @CreatedDate
     @get:Column(nullable = false, updatable = false)
-    open var createdAt: LocalDateTime? = null
-
+    open var createdAt: LocalDateTime? = LocalDateTime.MIN
+        protected set
     @LastModifiedDate
     @get:Column(nullable = false)
-    open var modifiedAt: LocalDateTime? = null
-
+    open var modifiedAt: LocalDateTime? = LocalDateTime.MIN
+        protected set
 
 }

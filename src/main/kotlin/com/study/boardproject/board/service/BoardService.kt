@@ -17,9 +17,10 @@ class BoardService(
     fun save(requestDto: BoardRequestDto): BoardResponseDto {
         val user = userService.findUserByEmail(requestDto.email)
 
-        val board = Board(requestDto, user)
+        validateRequest(requestDto)
+        val board = boardRepository.save(Board(requestDto, user))
 
-        return BoardResponseDto(boardRepository.save(board), user)
+        return BoardResponseDto(board, user)
     }
 
     fun findByBoardId(boardId: Long): Board = boardRepository.getByBoardId(boardId)
@@ -47,6 +48,7 @@ class BoardService(
 
         val board = findByBoardId(boardId)
 
+        validateRequest(requestDto)
         board.update(requestDto)
 
         return convertBoardToBoardResponse(boardRepository.save(board))
@@ -73,6 +75,12 @@ class BoardService(
 
     fun convertBoardToBoardResponse(board: Board) : BoardResponseDto
     = BoardResponseDto(board, board.writer!!)
+
+    private fun validateRequest(request: BoardRequestDto) {
+        require(request.title.isNotBlank() && request.content.isNotBlank()) {
+            "작성하지 않은 항목이 존재합니다."
+        }
+    }
 }
 
 
