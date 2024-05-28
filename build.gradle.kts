@@ -38,7 +38,16 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
 	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	runtimeOnly("com.h2database:h2")
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+		exclude(group = "org.mockito")
+	}
+
+	testImplementation("io.mockk:mockk:1.13.5")
+	testImplementation("io.kotest:kotest-runner-junit5:5.4.2")
+	testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
+
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	implementation("org.springframework.boot:spring-boot-starter-validation")
