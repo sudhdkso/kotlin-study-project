@@ -19,7 +19,7 @@ class CommentService(
 
         checkRequest(requestDto)
 
-        val savedComment = commnetRepository.save(Comment(requestDto, board, writer))
+        val savedComment = commnetRepository.save(requestDto.toEntity(board, writer))
         return savedComment
     }
 

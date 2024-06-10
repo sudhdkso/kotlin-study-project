@@ -18,7 +18,7 @@ class BoardService(
         val user = userService.findUserByEmail(requestDto.email)
 
         validateRequest(requestDto)
-        val board = boardRepository.save(Board(requestDto, user))
+        val board = boardRepository.save(requestDto.toEntity(user))
 
         return BoardResponseDto(board, user)
     }

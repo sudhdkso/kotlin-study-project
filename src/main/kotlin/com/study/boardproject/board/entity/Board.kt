@@ -23,8 +23,6 @@ class Board(title: String, content: String, writer: User) : BaseEntity() {
     @Column
     var viewCount : Long = 0
 
-    constructor (requestDto: BoardRequestDto, writer: User) : this(requestDto.title, requestDto.content, writer)
-
     fun update(requestDto: BoardRequestDto) {
         this.title = requestDto.title
         this.content = requestDto.content

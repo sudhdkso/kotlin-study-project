@@ -1,5 +1,8 @@
 package com.study.boardproject.board.dto.request
 
+import com.study.boardproject.board.entity.Board
+import com.study.boardproject.board.entity.Comment
+import com.study.boardproject.board.entity.User
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
@@ -17,5 +20,10 @@ data class CommentRequestDto(
     val boardId:Long,
 
     @field:NotBlank
-    val email:String
-)
+    val email:String,
+
+) {
+    fun toEntity(board: Board, user: User) : Comment {
+        return Comment(content, depth, board, user)
+    }
+}

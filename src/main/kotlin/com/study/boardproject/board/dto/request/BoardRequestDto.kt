@@ -1,6 +1,8 @@
 package com.study.boardproject.board.dto.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.study.boardproject.board.entity.Board
+import com.study.boardproject.board.entity.User
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 
@@ -22,4 +24,8 @@ data class BoardRequestDto(
 
     val content: String
         get() = _content!!
+
+    fun toEntity(user: User) : Board {
+        return Board(title, content, user)
+    }
 }

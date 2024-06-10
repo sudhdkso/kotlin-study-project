@@ -1,7 +1,6 @@
 package com.study.boardproject.board.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.study.boardproject.board.dto.request.UserRequestDto
 import jakarta.persistence.*
 
 @Entity
@@ -22,8 +21,6 @@ class User(email: String, name: String) {
     @OneToMany(mappedBy = "writer")
     @JsonIgnore
     val boardList :MutableList<Board> = mutableListOf()
-
-    constructor(requestDto: UserRequestDto) : this(requestDto.email, requestDto.name)
 
     fun updateUserName(name: String) {
         this.name = name

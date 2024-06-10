@@ -12,7 +12,7 @@ class UserService(val userRepository: UserRepository) {
     fun findUserByEmail(email: String): User = userRepository.getByEmail(email)
 
     fun save(requestDto: UserRequestDto) : UserResponseDto{
-        val user = userRepository.save(User(requestDto))
+        val user = userRepository.save(requestDto.toEntity())
         return UserResponseDto(user.email, user.name)
     }
 }
