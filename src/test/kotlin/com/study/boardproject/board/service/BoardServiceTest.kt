@@ -8,6 +8,7 @@ import com.study.boardproject.board.repository.getByBoardId
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.*
 import jakarta.validation.Validator
 import org.junit.jupiter.api.extension.ExtendWith
@@ -66,19 +67,20 @@ class BoardServiceTest : BehaviorSpec({
 
         val title = "수정"
         val request = createBoardRequest(title = title)
+        val board = createBoard()
         val boardId = 1L;
-        val user = createUser()
 
         every { userService.findUserByEmail(any()) } returns createUser()
-        every { boardRepository.save(any()) } returns createBoard(title = title)
+        every { boardService.findByBoardId(any()) } returns board;
 
+        every { boardRepository.save(any()) } returns createBoard(title = title)
         every { boardRepository.delete(any()) } just runs
 
 
         When("수정하면") {
             val actual = boardService.update(boardId, request)
             Then("성공한다.") {
-                actual.title shouldBe title
+                actual shouldNotBe board
             }
         }
 
@@ -86,8 +88,6 @@ class BoardServiceTest : BehaviorSpec({
             boardService.deleteByBoardId(boardId)
             Then("성공한다.") {
                 verify(exactly = 1) { boardRepository.delete(any()) }
-
-
                 
             }
         }

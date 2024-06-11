@@ -2,6 +2,7 @@ package com.study.boardproject.board.service
 
 import com.study.boardproject.board.dto.request.UserRequestDto
 import com.study.boardproject.board.dto.response.UserResponseDto
+import com.study.boardproject.board.dto.response.toDto
 import com.study.boardproject.board.entity.User
 import com.study.boardproject.board.repository.UserRepository
 import com.study.boardproject.board.repository.getByEmail
@@ -13,6 +14,6 @@ class UserService(val userRepository: UserRepository) {
 
     fun save(requestDto: UserRequestDto) : UserResponseDto{
         val user = userRepository.save(requestDto.toEntity())
-        return UserResponseDto(user.email, user.name)
+        return user.toDto()
     }
 }

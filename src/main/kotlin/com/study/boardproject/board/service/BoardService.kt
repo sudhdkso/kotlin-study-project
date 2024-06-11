@@ -2,6 +2,7 @@ package com.study.boardproject.board.service
 
 import com.study.boardproject.board.dto.request.BoardRequestDto
 import com.study.boardproject.board.dto.response.BoardResponseDto
+import com.study.boardproject.board.dto.response.toDto
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.repository.BoardRepository
 import com.study.boardproject.board.repository.getByBoardId
@@ -28,18 +29,12 @@ class BoardService(
     //게시글 개별 조회
     fun findOne(boardId: Long): BoardResponseDto {
         val board = findByBoardId(boardId)
-        return convertBoardToBoardResponse(board)
+        return board.toDto()
     }
 
     //게시글 전체 조회는 최근 작성순 or 조회순 두가지
     fun findAll(pageable: Pageable) : List<BoardResponseDto> {
-        val boardResponseList: MutableList<BoardResponseDto>  = mutableListOf()
-
-        for(board in boardRepository.findAll(pageable)) {
-            boardResponseList.add(convertBoardToBoardResponse(board))
-        }
-
-        return boardResponseList.toList()
+        return boardRepository.findAll(pageable).map { it.toDto() }.toList()
     }
 
     //업데이트
@@ -51,7 +46,7 @@ class BoardService(
         validateRequest(requestDto)
         board.update(requestDto)
         val savedBoard = boardRepository.save(board)
-        return convertBoardToBoardResponse(savedBoard)
+        return savedBoard.toDto()
     }
 
     //삭제
@@ -61,13 +56,8 @@ class BoardService(
     }
 
     fun search(query: String) : List<BoardResponseDto> {
-        val boardResponseList: MutableList<BoardResponseDto>  = mutableListOf()
-
-        for(board in boardRepository.searchByTitleOrContent(query)) {
-            boardResponseList.add(convertBoardToBoardResponse(board))
-        }
-
-        return boardResponseList.toList()
+        val boardList = boardRepository.searchByTitleOrContent(query)
+        return boardList.map { it.toDto() }
     }
 
     fun viewCountup(boardId: Long) {
@@ -75,9 +65,6 @@ class BoardService(
         board.viewCountUp()
         boardRepository.save(board)
     }
-
-    fun convertBoardToBoardResponse(board: Board) : BoardResponseDto
-    = BoardResponseDto(board, board.writer!!)
 
     private fun validateRequest(request: BoardRequestDto) {
         require(request.title.isNotBlank() && request.content.isNotBlank()) {
