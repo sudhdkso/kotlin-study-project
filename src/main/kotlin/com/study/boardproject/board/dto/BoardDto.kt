@@ -56,8 +56,8 @@ fun Board.toDto() : BoardResponseDto = BoardResponseDto(
     title = title ?: "Default Title",
     content = content ?: "Default Content",
     viewCount = viewCount,
-    createdAt = LocalDateTime.now(),
-    modifiedAt = LocalDateTime.now(),
+    createdAt = createdAt ?: LocalDateTime.now(),
+    modifiedAt = modifiedAt ?: LocalDateTime.now(),
     writerEmail = writer?.email ?: "unknown@example.com",
     writerName = writer?.name ?: "Unknown Writer"
 )
