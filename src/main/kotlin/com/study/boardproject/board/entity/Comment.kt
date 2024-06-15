@@ -1,5 +1,6 @@
 package com.study.boardproject.board.entity
 
+import com.study.boardproject.board.dto.CommentRequestDto
 import jakarta.persistence.*
 
 @Entity
@@ -10,7 +11,7 @@ class Comment(content: String, depth: Int, board: Board, writer: User) : BaseEnt
     val id: Long? = null
 
     @Column(nullable = false, length = Int.MAX_VALUE)
-    val content: String? = content
+    var content: String? = content
 
     @Column(nullable = false)
     val depth: Int = depth
@@ -22,4 +23,8 @@ class Comment(content: String, depth: Int, board: Board, writer: User) : BaseEnt
     @JoinColumn(name = "userId", referencedColumnName = "id", insertable = true, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     val writer: User? = writer
+
+    fun update(requestDto: CommentRequestDto) {
+        content = requestDto.content
+    }
 }

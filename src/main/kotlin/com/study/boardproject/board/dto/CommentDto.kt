@@ -7,8 +7,9 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.hibernate.validator.constraints.Range
+import java.time.LocalDateTime
 
-data class CommentDto(
+data class CommentRequestDto(
     @field:NotBlank
     @field:Size(min = 1, max = Int.MAX_VALUE)
     val content:String,
@@ -27,3 +28,28 @@ data class CommentDto(
         return Comment(content, depth, board, user)
     }
 }
+
+data class CommentUpdateRequestDto(
+    @field:NotBlank
+    val commentId:Long,
+
+    @field:NotBlank
+    @field:Size(min = 1, max = Int.MAX_VALUE)
+    val content:String,
+
+    ) {
+}
+
+data class CommentResponseDto(
+    val content : String?,
+    val writerName : String,
+    val createdAt :LocalDateTime,
+    val modifiedAt : LocalDateTime
+)
+
+fun Comment.toDto() : CommentResponseDto = CommentResponseDto(
+    content = content ?: "Default Content",
+    writerName = writer?.name ?: "Unknown Writer",
+    createdAt = createdAt ?: LocalDateTime.now(),
+    modifiedAt = modifiedAt ?: LocalDateTime.now(),
+)

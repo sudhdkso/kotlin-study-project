@@ -23,6 +23,9 @@ class Board(title: String, content: String, writer: User) : BaseEntity() {
     @Column
     var viewCount : Long = 0
 
+    @OneToMany(mappedBy = "board")
+    val commentList : MutableList<Comment> = mutableListOf()
+
     fun update(requestDto: BoardRequestDto) {
         this.title = requestDto.title
         this.content = requestDto.content
