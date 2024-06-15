@@ -1,6 +1,6 @@
 package com.study.boardproject.board
 
-import com.study.boardproject.board.dto.request.BoardRequestDto
+import com.study.boardproject.board.dto.BoardRequestDto
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.entity.User
 

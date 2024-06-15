@@ -1,4 +1,4 @@
-package com.study.boardproject.board.dto.request
+package com.study.boardproject.board.dto
 
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.entity.Comment
@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.hibernate.validator.constraints.Range
 
-data class CommentRequestDto(
+data class CommentDto(
     @field:NotBlank
     @field:Size(min = 1, max = Int.MAX_VALUE)
     val content:String,

@@ -1,8 +1,8 @@
 package com.study.boardproject.board.service
 
-import com.study.boardproject.board.dto.request.BoardRequestDto
-import com.study.boardproject.board.dto.response.BoardResponseDto
-import com.study.boardproject.board.dto.response.toDto
+import com.study.boardproject.board.dto.BoardRequestDto
+import com.study.boardproject.board.dto.BoardResponseDto
+import com.study.boardproject.board.dto.toDto
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.repository.BoardRepository
 import com.study.boardproject.board.repository.getByBoardId

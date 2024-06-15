@@ -1,7 +1,7 @@
 package com.study.boardproject.board.controller
 
-import com.study.boardproject.board.dto.request.UserRequestDto
-import com.study.boardproject.board.dto.response.UserResponseDto
+import com.study.boardproject.board.dto.UserRequestDto
+import com.study.boardproject.board.dto.UserResponseDto
 import com.study.boardproject.board.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

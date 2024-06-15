@@ -1,7 +1,7 @@
 package com.study.boardproject.board.controller
 
-import com.study.boardproject.board.dto.request.BoardRequestDto
-import com.study.boardproject.board.dto.response.BoardResponseDto
+import com.study.boardproject.board.dto.BoardRequestDto
+import com.study.boardproject.board.dto.BoardResponseDto
 import com.study.boardproject.board.service.BoardService
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
