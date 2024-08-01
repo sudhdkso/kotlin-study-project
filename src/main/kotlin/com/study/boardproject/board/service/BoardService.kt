@@ -1,8 +1,6 @@
 package com.study.boardproject.board.service
 
-import com.study.boardproject.board.dto.BoardRequestDto
-import com.study.boardproject.board.dto.BoardResponseDto
-import com.study.boardproject.board.dto.toDto
+import com.study.boardproject.board.dto.*
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.repository.BoardRepository
 import com.study.boardproject.board.repository.getByBoardId
@@ -35,8 +33,8 @@ class BoardService(
     }
 
     //게시글 전체 조회는 최근 작성순 or 조회순 두가지
-    fun findAll(pageable: Pageable) : List<BoardResponseDto> {
-        return boardRepository.findByDeletedAtIsNull(pageable).map { it.toDto() }.toList()
+    fun findAll(pageable: Pageable) : List<BoardListResponseDto> {
+        return boardRepository.findByDeletedAtIsNull(pageable).map { it.toListDto() }.toList()
     }
 
     //업데이트

@@ -1,7 +1,7 @@
 package com.study.boardproject.board.entity
 
 import com.study.boardproject.board.dto.BoardRequestDto
-import com.study.boardproject.util.constants.BoardConstants.MAX_EDITABLE_DAYS
+import com.study.boardproject.util.constants.BoardConstants.EDITABLE_PERIOD_DAYS
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -37,10 +37,20 @@ class Board(title: String, content: String, writer: User) : BaseEntity() {
         this.content = requestDto.content
     }
 
+    fun calculateEditableDaysRemaining(): Long {
+        val now = LocalDateTime.now()
+        val daysSinceCreation = ChronoUnit.DAYS.between(createdAt, now)
+        return if (daysSinceCreation <= EDITABLE_PERIOD_DAYS) {
+            EDITABLE_PERIOD_DAYS - daysSinceCreation
+        } else {
+            -1
+        }
+    }
+
     fun canEditBoard() : Boolean {
         val now = LocalDateTime.now()
-        val day = ChronoUnit.DAYS.between(createdAt, now) //두 날짜간의 차이
-        return day <= MAX_EDITABLE_DAYS
+        val daysSinceCreation = ChronoUnit.DAYS.between(createdAt, now)
+        return daysSinceCreation <= EDITABLE_PERIOD_DAYS
     }
 
     fun viewCountUp(){

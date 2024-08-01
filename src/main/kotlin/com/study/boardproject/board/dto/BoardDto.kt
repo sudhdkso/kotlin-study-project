@@ -31,11 +31,29 @@ data class BoardRequestDto(
     }
 }
 
+data class BoardListResponseDto(
+    val id: Long,
+    val title:String,
+    val viewCount: Long,
+    val createdAt : LocalDateTime,
+    val writerName: String
+) {
+    constructor(board: Board, user: User) : this(
+        board.id ?: -1,
+        board.title ?: "Default Title",
+        board.viewCount,
+        board.createdAt ?: LocalDateTime.now(),
+        user.name) {
+
+    }
+}
+
 data class BoardResponseDto(
     val id: Long,
     val title: String,
     val content: String,
     val viewCount: Long,
+    val remainingDays: Long,
     val createdAt: LocalDateTime,
     val modifiedAt: LocalDateTime,
     val writerEmail: String,
@@ -46,6 +64,7 @@ data class BoardResponseDto(
         board.title ?: "Default Title",
         board.content ?: "Default Content",
         board.viewCount,
+        board.calculateEditableDaysRemaining(),
         board.createdAt ?: LocalDateTime.now(),
         board.modifiedAt ?: LocalDateTime.now(),
         user.email,
@@ -55,13 +74,10 @@ data class BoardResponseDto(
 }
 
 fun Board.toDto() : BoardResponseDto = BoardResponseDto(
-    id = id ?: -1,
-    title = title ?: "Default Title",
-    content = content ?: "Default Content",
-    viewCount = viewCount,
-    createdAt = createdAt ?: LocalDateTime.now(),
-    modifiedAt = modifiedAt ?: LocalDateTime.now(),
-    writerEmail = writer?.email ?: "unknown@example.com",
-    writerName = writer?.name ?: "Unknown Writer"
+    this,
+    User( email = writer?.email ?: "unknown@example.com", name = writer?.name ?: "Unknown Writer")
 )
-
+fun Board.toListDto(): BoardListResponseDto = BoardListResponseDto(
+    this,
+    User( email = writer?.email ?: "unknown@example.com", name = writer?.name ?: "Unknown Writer")
+)

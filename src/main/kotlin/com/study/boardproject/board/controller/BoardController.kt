@@ -1,5 +1,6 @@
 package com.study.boardproject.board.controller
 
+import com.study.boardproject.board.dto.BoardListResponseDto
 import com.study.boardproject.board.dto.BoardRequestDto
 import com.study.boardproject.board.dto.BoardResponseDto
 import com.study.boardproject.board.service.BoardService
@@ -38,7 +39,7 @@ class BoardController(val boardService: BoardService) {
         @RequestParam("sortBy") sortBy: String,
         @RequestParam("order") sortOrder: String,
         @PageableDefault(size = 10, sort = ["createdAt"], direction = Sort.Direction.DESC) pageable: Pageable
-    ) : ResponseEntity<List<BoardResponseDto>> {
+    ) : ResponseEntity<List<BoardListResponseDto>> {
         val sortCriteria = SortCriteria.findSortCriteria(sortBy)
         val sortDirection = if (sortOrder.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
         val sortedPageable = PageRequest.of(pageable.pageNumber, pageable.pageSize, Sort.by(sortDirection, sortCriteria.sortProperty))

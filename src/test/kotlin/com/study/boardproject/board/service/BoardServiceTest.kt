@@ -1,5 +1,6 @@
 package com.study.boardproject.board.service
 
+import com.study.boardproject.board.controller.SortCriteria
 import com.study.boardproject.board.createBoard
 import com.study.boardproject.board.createBoardRequest
 import com.study.boardproject.board.createUser
@@ -14,6 +15,8 @@ import io.mockk.*
 import jakarta.validation.Validator
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
 
