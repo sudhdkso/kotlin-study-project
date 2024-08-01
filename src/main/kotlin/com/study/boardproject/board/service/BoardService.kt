@@ -6,6 +6,8 @@ import com.study.boardproject.board.dto.toDto
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.repository.BoardRepository
 import com.study.boardproject.board.repository.getByBoardId
+import com.study.boardproject.util.constants.BoardConstants.MAX_CONTENT_LENGTH
+import com.study.boardproject.util.constants.BoardConstants.MAX_TITLE_LENGTH
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
@@ -34,7 +36,7 @@ class BoardService(
 
     //게시글 전체 조회는 최근 작성순 or 조회순 두가지
     fun findAll(pageable: Pageable) : List<BoardResponseDto> {
-        return boardRepository.findAll(pageable).map { it.toDto() }.toList()
+        return boardRepository.findByDeletedAtIsNull(pageable).map { it.toDto() }.toList()
     }
 
     //업데이트
@@ -43,7 +45,9 @@ class BoardService(
 
         val board = findByBoardId(boardId)
 
+        checkEditableBoard(board)
         validateRequest(requestDto)
+
         board.update(requestDto)
         val savedBoard = boardRepository.save(board)
         return savedBoard.toDto()
@@ -52,7 +56,9 @@ class BoardService(
     //삭제
     fun deleteByBoardId(boardId: Long){
         val board = findByBoardId(boardId)
-        boardRepository.delete(board)
+        //soft delete
+        board.delete()
+        boardRepository.save(board)
     }
 
     fun search(query: String) : List<BoardResponseDto> {
@@ -66,7 +72,21 @@ class BoardService(
         boardRepository.save(board)
     }
 
+    private fun checkEditableBoard(board: Board) {
+        require(board.canEditBoard()){
+            "게시글 작성 10일 지나 게시글 수정이 불가능합니다."
+        }
+    }
+
     private fun validateRequest(request: BoardRequestDto) {
+        require(request.title.length <= MAX_TITLE_LENGTH) {
+            "게시글의 제목은 200자 이하로 작성해주세요."
+        }
+
+        require(request.content.length in 0..MAX_CONTENT_LENGTH) {
+            "게시글의 내용은 1000자 이하로 작성해주세요."
+        }
+
         require(request.title.isNotBlank() && request.content.isNotBlank()) {
             "작성하지 않은 항목이 존재합니다."
         }

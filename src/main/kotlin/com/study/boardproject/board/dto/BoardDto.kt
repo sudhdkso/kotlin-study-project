@@ -32,6 +32,7 @@ data class BoardRequestDto(
 }
 
 data class BoardResponseDto(
+    val id: Long,
     val title: String,
     val content: String,
     val viewCount: Long,
@@ -41,6 +42,7 @@ data class BoardResponseDto(
     val writerName: String){
 
     constructor(board: Board, user: User) : this(
+        board.id ?: -1,
         board.title ?: "Default Title",
         board.content ?: "Default Content",
         board.viewCount,
@@ -53,6 +55,7 @@ data class BoardResponseDto(
 }
 
 fun Board.toDto() : BoardResponseDto = BoardResponseDto(
+    id = id ?: -1,
     title = title ?: "Default Title",
     content = content ?: "Default Content",
     viewCount = viewCount,

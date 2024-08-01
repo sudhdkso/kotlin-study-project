@@ -3,6 +3,7 @@ package com.study.boardproject.board.repository
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.entity.QBoard
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.data.repository.findByIdOrNull
@@ -20,7 +21,9 @@ class BoardRepositoryImpl(
         val board = QBoard.board
         return queryFactory.selectFrom(board)
             .where(board.title.containsIgnoreCase(searchQuery)
-                .or(board.content.containsIgnoreCase(searchQuery)))
+                .or(board.content.containsIgnoreCase(searchQuery))
+                .and(board.deletedAt.isNull)
+            )
             .orderBy(board.createdAt.desc())
             .fetch()
     }
@@ -32,5 +35,6 @@ fun BoardRepository.getByBoardId(id: Long) : Board{
 
 interface BoardRepository : JpaRepository<Board, Long>,BoardRepositoryCustom{
     fun save(board: Board) : Board
+    fun findByDeletedAtIsNull(pageable: Pageable) : List<Board>
 
 }

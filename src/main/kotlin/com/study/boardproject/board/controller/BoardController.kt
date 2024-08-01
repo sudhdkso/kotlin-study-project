@@ -35,18 +35,19 @@ class BoardController(val boardService: BoardService) {
 
     @GetMapping
     fun getAll(
-        @RequestParam("sort") sort: String,
+        @RequestParam("sortBy") sortBy: String,
+        @RequestParam("order") sortOrder: String,
         @PageableDefault(size = 10, sort = ["createdAt"], direction = Sort.Direction.DESC) pageable: Pageable
     ) : ResponseEntity<List<BoardResponseDto>> {
-        val sortCriteria = SortCriteria.findSortCriteria(sort)
-        val sortedPageable = PageRequest.of(pageable.pageNumber, pageable.pageSize, Sort.by(Sort.Order.desc(sortCriteria.sortProperty)))
+        val sortCriteria = SortCriteria.findSortCriteria(sortBy)
+        val sortDirection = if (sortOrder.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
+        val sortedPageable = PageRequest.of(pageable.pageNumber, pageable.pageSize, Sort.by(sortDirection, sortCriteria.sortProperty))
         val responseList = boardService.findAll(sortedPageable)
         return ResponseEntity.ok().body(responseList)
     }
 
     @GetMapping("/search")
     fun search(
-
         @RequestParam("query")
         @Size(min = 2, max = 50, message = "The length of the query must be 1 to 50")
         query:String

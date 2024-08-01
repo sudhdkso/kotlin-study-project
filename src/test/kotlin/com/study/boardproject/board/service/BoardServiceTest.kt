@@ -3,6 +3,7 @@ package com.study.boardproject.board.service
 import com.study.boardproject.board.createBoard
 import com.study.boardproject.board.createBoardRequest
 import com.study.boardproject.board.createUser
+import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.repository.BoardRepository
 import com.study.boardproject.board.repository.getByBoardId
 import io.kotest.assertions.throwables.shouldThrow
@@ -43,6 +44,24 @@ class BoardServiceTest : BehaviorSpec({
 
     Given("게시글 내용이 유효하지 않는 경우") {
         every { userService.findUserByEmail(any()) } returns createUser()
+        When("제목을 200자 초과로 작성하면") {
+            val title = "a".repeat(201)
+            val request = createBoardRequest(title)
+            Then("예외를 반환한다."){
+                shouldThrow<IllegalArgumentException> {
+                    boardService.save(request)
+                }
+            }
+        }
+        When("내용을 1000자 초과로 작성하면") {
+            val content = "b".repeat(10001)
+            val request = createBoardRequest(content = content)
+            Then("예외를 반환한다."){
+                shouldThrow<IllegalArgumentException> {
+                    boardService.save(request)
+                }
+            }
+        }
         When("제목을 빈값으로 저장하면") {
             val title = ""
             val request = createBoardRequest(title = title)
@@ -52,6 +71,7 @@ class BoardServiceTest : BehaviorSpec({
                 }
             }
         }
+
         When("내용을 빈값으로 저장하면") {
             val content = ""
             val request = createBoardRequest(content = content)
@@ -67,7 +87,7 @@ class BoardServiceTest : BehaviorSpec({
 
         val title = "수정"
         val request = createBoardRequest(title = title)
-        val board = createBoard()
+        val board = spyk<Board>(createBoard())
         val boardId = 1L;
 
         every { userService.findUserByEmail(any()) } returns createUser()
@@ -76,18 +96,18 @@ class BoardServiceTest : BehaviorSpec({
         every { boardRepository.save(any()) } returns createBoard(title = title)
         every { boardRepository.delete(any()) } just runs
 
-
+        every { board.canEditBoard() } returns true
         When("수정하면") {
             val actual = boardService.update(boardId, request)
             Then("성공한다.") {
-                actual shouldNotBe board
+                actual.title shouldBe title
             }
         }
 
         When("삭제하면") {
             boardService.deleteByBoardId(boardId)
             Then("성공한다.") {
-                verify(exactly = 1) { boardRepository.delete(any()) }
+                board.deletedAt shouldNotBe null
                 
             }
         }
@@ -119,5 +139,26 @@ class BoardServiceTest : BehaviorSpec({
                 }
             }
         }
+    }
+
+    Given("10일이 지난 게시글을") {
+        val title = "수정"
+        val request = createBoardRequest(title = title)
+        val board = spyk<Board>(createBoard())
+        val boardId = 1L;
+
+        every { userService.findUserByEmail(any()) } returns createUser()
+        every { boardService.findByBoardId(any()) } returns board;
+
+        every { board.canEditBoard() } returns false
+
+        When("수정하려고 하면") {
+            Then("예외가 발생한다."){
+                shouldThrow<IllegalArgumentException> {
+                    boardService.update(boardId, request)
+                }
+            }
+        }
+
     }
 })
