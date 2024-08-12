@@ -8,6 +8,7 @@ import com.study.boardproject.util.constants.BoardConstants.MAX_CONTENT_LENGTH
 import com.study.boardproject.util.constants.BoardConstants.MAX_TITLE_LENGTH
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class BoardService(
@@ -34,7 +35,7 @@ class BoardService(
     }
 
     //게시글 전체 조회는 최근 작성순 or 조회순 두가지
-    fun findAll(pageable: Pageable) : List<BoardListResponseDto> {
+    fun findAll(pageable: Pageable): List<BoardListResponseDto> {
         return boardRepository.findByDeletedAtIsNull(pageable).map { it.toListDto() }.toList()
     }
 
@@ -53,14 +54,14 @@ class BoardService(
     }
 
     //삭제
-    fun deleteByBoardId(boardId: Long){
+    fun deleteByBoardId(boardId: Long) {
         val board = findByBoardId(boardId)
         //soft delete
         board.delete()
         boardRepository.save(board)
     }
 
-    fun search(query: String) : List<BoardResponseDto> {
+    fun search(query: String): List<BoardResponseDto> {
         val boardList = boardRepository.searchByTitleOrContent(query)
         return boardList.map { it.toDto() }
     }
@@ -71,8 +72,20 @@ class BoardService(
         boardRepository.save(board)
     }
 
+    fun findBoardWithEditDedlineSoon(): List<Board> {
+        val now = LocalDateTime.now()
+        val nineDaysAgo = now.minusDays(9)
+        val tenDaysAgo = now.minusDays(10)
+        return boardRepository.findWithEditPeriodImminent(nineDaysAgo, tenDaysAgo)
+    }
+
+    fun sendEditDeadlineNotifications() {
+        val boards = findBoardWithEditDedlineSoon()
+        boards.forEach { board -> notificationService.sendEditDeadlineNotification(board) }
+    }
+
     private fun checkEditableBoard(board: Board) {
-        require(board.canEditBoard()){
+        require(board.canEditBoard()) {
             "게시글 작성 10일 지나 게시글 수정이 불가능합니다."
         }
     }
