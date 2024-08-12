@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class CommentService(
-    val commnetRepository: CommentRepository,
-    val boardService: BoardService,
-    val userService: UserService
+    private val commnetRepository: CommentRepository,
+    private val boardService: BoardService,
+    private val userService: UserService
 ) {
 
     fun save(requestDto: CommentRequestDto) : Comment{

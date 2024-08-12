@@ -17,10 +17,10 @@ class Board(title: String, content: String, writer: User) : BaseEntity() {
     @ManyToOne(fetch = FetchType.LAZY)
     val writer: User? = writer
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 200)
     var title: String? = title
 
-    @Column(nullable = false, length = Int.MAX_VALUE)
+    @Column(nullable = false, length = 1000)
     var content: String? = content
 
     @Column

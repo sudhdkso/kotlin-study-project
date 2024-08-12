@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class BoardService(
-    val boardRepository: BoardRepository,
-    val userService: UserService
+    private val boardRepository: BoardRepository,
+    private val userService: UserService,
+    private val notificationService: NotificationService
 ) {
     // 생성
     fun save(requestDto: BoardRequestDto): BoardResponseDto {

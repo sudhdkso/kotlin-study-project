@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/board")
 @RestController
 @Validated
-class BoardController(val boardService: BoardService) {
+class BoardController(private val boardService: BoardService) {
     @PostMapping
     fun create(@RequestBody @Valid requestDto: BoardRequestDto) : ResponseEntity<BoardResponseDto>{
         val boardResponse = boardService.save(requestDto)
