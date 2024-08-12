@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.springframework.boot") version "3.2.5"
 	id("io.spring.dependency-management") version "1.1.4"
+	id ("jacoco")
+	id ("org.sonarqube") version "4.3.1.3277"
 
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
@@ -82,6 +84,16 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+	}
 }
 
 idea {
@@ -89,5 +101,15 @@ idea {
 		val kaptMain = file("build/generated/source/kapt/main")
 		sourceDirs.add(kaptMain)
 		generatedSourceDirs.add(kaptMain)
+	}
+}
+
+sonarqube {
+	properties {
+		property("sonar.projectKey", "sudhdkso_kotlin-study-project")
+		property("sonar.organization", "qwewww01234543210")
+		property("sonar.host.url", "https://sonarcloud.io")
+		property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+		property("sonar.inclusions","src/main/kotlin/com/study/boardproject/board/entity/**, src/main/kotlin/com/study/boardproject/board/service/**")
 	}
 }
