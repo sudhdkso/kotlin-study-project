@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
@@ -16,6 +18,16 @@ class CustomExceptionHandler {
     protected fun invalidInputException(ex: InvalidInputException) : ResponseEntity<ErrorResponse> {
         val errors = ErrorResponse(ex.message ?: "Not Exception Message")
         return ResponseEntity(errors, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    fun handleIllegalArgumentException(ex: IllegalArgumentException): ErrorResponse {
+        return ErrorResponse(
+            errorType = "INVALID_ARGUMENT",
+            message = ex.message ?: "Invalid arguments provided"
+        )
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
@@ -28,6 +40,7 @@ class CustomExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected fun invalidInputException(ex: ConstraintViolationException) : ResponseEntity<List<ErrorResponse>> {
         val errors = ex.constraintViolations.map { violation ->
             ErrorResponse(message = violation.message)
