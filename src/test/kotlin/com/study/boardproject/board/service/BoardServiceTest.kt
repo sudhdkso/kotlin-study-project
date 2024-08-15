@@ -11,11 +11,9 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.*
-import jakarta.validation.Validator
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
@@ -25,8 +23,6 @@ class BoardServiceTest : BehaviorSpec({
     val userService: UserService = mockk()
     val notificationService: NotificationService = mockk()
     val boardService: BoardService = BoardService(boardRepository, userService, notificationService)
-
-    val validator: Validator = LocalValidatorFactoryBean().apply { afterPropertiesSet() }
 
     Given("사용자와 게시글이 모두 유효한 경우") {
         val title = "테스트1"
