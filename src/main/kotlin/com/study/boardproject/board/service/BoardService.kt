@@ -41,8 +41,6 @@ class BoardService(
 
     //업데이트
     fun update(boardId: Long, requestDto: BoardRequestDto): BoardResponseDto {
-        val user = userService.findUserByEmail(requestDto.email)
-
         val board = findByBoardId(boardId)
 
         checkEditableBoard(board)

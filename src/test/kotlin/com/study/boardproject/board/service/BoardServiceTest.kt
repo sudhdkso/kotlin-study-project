@@ -22,7 +22,7 @@ class BoardServiceTest : BehaviorSpec({
     val boardRepository: BoardRepository = mockk()
     val userService: UserService = mockk()
     val notificationService: NotificationService = mockk()
-    val boardService: BoardService = BoardService(boardRepository, userService, notificationService)
+    val boardService = BoardService(boardRepository, userService, notificationService)
 
     Given("사용자와 게시글이 모두 유효한 경우") {
         val title = "테스트1"
@@ -85,10 +85,10 @@ class BoardServiceTest : BehaviorSpec({
         val title = "수정"
         val request = createBoardRequest(title = title)
         val board = spyk<Board>(createBoard())
-        val boardId = 1L;
+        val boardId = 1L
 
         every { userService.findUserByEmail(any()) } returns createUser()
-        every { boardService.findByBoardId(any()) } returns board;
+        every { boardService.findByBoardId(any()) } returns board
 
         every { boardRepository.save(any()) } returns createBoard(title = title)
         every { boardRepository.delete(any()) } just runs
@@ -112,7 +112,7 @@ class BoardServiceTest : BehaviorSpec({
 
     Given("존재하지 않는 게시글을") {
         val title = "수정"
-        val boardId = 1L;
+        val boardId = 1L
         val request = createBoardRequest(title = title)
         every { boardRepository.getByBoardId(any()) } throws NoSuchElementException()
         When("조회하려고 하면") {
@@ -142,10 +142,10 @@ class BoardServiceTest : BehaviorSpec({
         val title = "수정"
         val request = createBoardRequest(title = title)
         val board = spyk<Board>(createBoard())
-        val boardId = 1L;
+        val boardId = 1L
 
         every { userService.findUserByEmail(any()) } returns createUser()
-        every { boardService.findByBoardId(any()) } returns board;
+        every { boardService.findByBoardId(any()) } returns board
 
         every { board.canEditBoard() } returns false
 
