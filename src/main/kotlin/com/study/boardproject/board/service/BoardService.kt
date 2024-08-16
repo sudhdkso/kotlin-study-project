@@ -28,12 +28,6 @@ class BoardService(
 
     fun findByBoardId(boardId: Long): Board = boardRepository.getByBoardId(boardId)
 
-    //게시글 개별 조회
-    fun findOne(boardId: Long): BoardResponseDto {
-        val board = findByBoardId(boardId)
-        return board.toDto()
-    }
-
     //게시글 전체 조회는 최근 작성순 or 조회순 두가지
     fun findAll(pageable: Pageable): List<BoardListResponseDto> {
         return boardRepository.findByDeletedAtIsNull(pageable).map { it.toListDto() }.toList()

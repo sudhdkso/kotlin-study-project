@@ -3,6 +3,7 @@ package com.study.boardproject.board.controller
 import com.study.boardproject.board.dto.BoardListResponseDto
 import com.study.boardproject.board.dto.BoardRequestDto
 import com.study.boardproject.board.dto.BoardResponseDto
+import com.study.boardproject.board.dto.toDto
 import com.study.boardproject.board.service.BoardService
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
@@ -30,7 +31,7 @@ class BoardController(private val boardService: BoardService) {
     @GetMapping("/{id}")
     fun getOne(@PathVariable("id")boardId: Long, req: HttpServletRequest, res: HttpServletResponse): ResponseEntity<BoardResponseDto> {
         viewCountUp(boardId, req, res)
-        val boardResponse = boardService.findOne(boardId)
+        val boardResponse = boardService.findByBoardId(boardId).toDto()
         return ResponseEntity.ok().body(boardResponse)
     }
 
@@ -112,9 +113,7 @@ enum class SortCriteria(val sortProperty: String) {
 
     companion object {
         fun findSortCriteria(sort : String) : SortCriteria{
-            return values()
-                .filter { it.sortProperty == sort}
-                .first()
+            return values().first { it.sortProperty == sort }
         }
     }
 }

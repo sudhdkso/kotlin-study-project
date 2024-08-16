@@ -11,7 +11,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 
-interface BoardRepositoryCustom {
+fun interface BoardRepositoryCustom {
     fun searchByTitleOrContent(searchQuery: String): List<Board>
 }
 
