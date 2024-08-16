@@ -26,6 +26,6 @@ services:
     image: mariadb:10.7
     entrypoint: sh -c 'until mysql -h "db" -u testuser -ptestpassword -e "SELECT 1" --silent; do echo "Waiting for MariaDB..."; sleep 5; done'
     depends_on:
-      - db
+      - board-db-1
 
 
