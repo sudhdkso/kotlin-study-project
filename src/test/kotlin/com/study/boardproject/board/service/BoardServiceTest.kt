@@ -19,7 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @SpringBootTest
 class BoardServiceTest : BehaviorSpec({
 
-    val boardRepository: BoardRepository = mockk()
+    val boardRepository: BoardRepository = mockk(relaxed = true)
     val userService: UserService = mockk()
     val notificationService: NotificationService = mockk()
     val boardService = BoardService(boardRepository, userService, notificationService)
