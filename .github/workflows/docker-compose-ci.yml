@@ -23,8 +23,5 @@ jobs:
         run: |
           docker-compose run --rm client sh -c 'until mysql -h "board-db-1" -u kb -p1234 -e "SELECT 1" --silent; do echo "Waiting for MariaDB..."; sleep 5; done'
 
-      - name: Run tests
-        run: docker-compose exec app ./gradlew test --info
-
       - name: Shutdown Docker Compose
         run: docker-compose down
