@@ -8,7 +8,6 @@ jobs:
   build:
     name: Build and analyze
     runs-on: ubuntu-latest
-    needs: docker-compose-ci
     steps:
       - uses: actions/checkout@v3
         with:
