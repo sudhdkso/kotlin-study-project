@@ -19,9 +19,9 @@ jobs:
       - name: Build and run Docker Compose services
         run: docker-compose up -d --build
 
-      - name: Wait for MySQL to be ready
+      - name: Wait for MariaDB to be ready
         run: |
-          docker-compose exec -T db sh -c 'until mysqladmin ping -h "localhost" --silent; do echo "Waiting for mysql..."; sleep 5; done'
+          docker-compose exec -T db sh -c 'until mysql -h "localhost" -e "SELECT 1" --silent; do echo "Waiting for MariaDB..."; sleep 5; done'
 
       - name: Run tests
         run: docker-compose exec app ./gradlew test --info
