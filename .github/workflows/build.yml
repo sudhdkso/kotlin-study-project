@@ -38,6 +38,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew build jacocoTestReport sonar --info
-
-      - name: Shutdown Docker Compose
-        run: docker-compose down
