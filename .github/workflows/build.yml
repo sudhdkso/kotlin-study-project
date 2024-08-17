@@ -23,7 +23,16 @@ jobs:
           mysql root password: ${{ secrets.RootPassword }}
           mysql user: 'kb'
           mysql password: ${{ secrets.DatabasePassword }}
-          
+      - name: Wait for MariaDB to be ready
+        run: |
+          curl -sSL https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh > wait-for-it.sh
+          chmod +x wait-for-it.sh
+          ./wait-for-it.sh localhost:3306 -- echo "MariaDB is up"
+  
+      - name: Grant DB Privileges
+        run: |
+          mysql -h localhost -P 3306 -u root -p${{ secrets.RootPassword }} -e "GRANT ALL PRIVILEGES ON kotlin_board.* TO 'kb'@'%' IDENTIFIED BY '${{ secrets.DatabasePassword }}'; FLUSH PRIVILEGES;"  
+      
       - name: Set permissions for gradlew
         run: chmod +x ./gradlew
         
