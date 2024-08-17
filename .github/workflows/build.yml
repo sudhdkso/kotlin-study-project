@@ -12,17 +12,18 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Set up Docker Compose
-        run: sudo apt-get update && sudo apt-get install -y docker-compose
-
-      - name: Build and run Docker Compose services
-        run: docker-compose up -d --build
-
-      - name: Wait for MariaDB to be ready
-        run: |
-          docker-compose run --rm client sh -c 'until mysql -h "board-db-1" -u kb -p1234 -e "SELECT 1" --silent; do echo "Waiting for MariaDB..."; sleep 5; done'
-
+          
+      - uses: getong/mariadb-action@v1.1
+        with:
+          host port: 3306 
+          container port: 3306 
+          character set server: 'utf8mb4'
+          collation server: 'utf8mb4_general_ci'
+          mysql database: 'some_test'
+          mysql root password: ${{ secrets.RootPassword }}
+          mysql user: 'kb'
+          mysql password: ${{ secrets.DatabasePassword }}
+          
       - name: Set permissions for gradlew
         run: chmod +x ./gradlew
         
