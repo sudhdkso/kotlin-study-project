@@ -19,7 +19,7 @@ jobs:
           container port: 3306 
           character set server: 'utf8mb4'
           collation server: 'utf8mb4_general_ci'
-          mysql database: 'some_test'
+          mysql database: 'kotlin_board'
           mysql root password: ${{ secrets.RootPassword }}
           mysql user: 'kb'
           mysql password: ${{ secrets.DatabasePassword }}
