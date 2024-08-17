@@ -31,7 +31,7 @@ jobs:
   
       - name: Grant DB Privileges
         run: |
-          mysql -h localhost -P 3306 -u root -p${{ secrets.RootPassword }} -e "GRANT ALL PRIVILEGES ON kotlin_board.* TO 'kb'@'%' IDENTIFIED BY '${{ secrets.DatabasePassword }}'; FLUSH PRIVILEGES;"  
+          mysql -h 127.0.0.1 -P 3306 -u root -p${{ secrets.RootPassword }} -e "CREATE USER 'kb'@'%' IDENTIFIED BY '${{ secrets.DatabasePassword }}'; GRANT ALL PRIVILEGES ON kotlin_board.* TO 'kb'@'%'; FLUSH PRIVILEGE  
       
       - name: Set permissions for gradlew
         run: chmod +x ./gradlew
