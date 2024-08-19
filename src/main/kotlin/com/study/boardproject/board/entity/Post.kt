@@ -49,8 +49,8 @@ class Post(title: String, content: String, writer: User) : BaseEntity() {
 
     fun canEditPost() : Boolean {
         val now = LocalDateTime.now()
-        val daysSinceCreation = ChronoUnit.DAYS.between(createdAt, now)
-        return daysSinceCreation <= EDITABLE_PERIOD_DAYS
+        val daysSinceCreation = ChronoUnit.DAYS.between(now, createdAt)
+        return daysSinceCreation < EDITABLE_PERIOD_DAYS
     }
 
     fun viewCountUp(){
