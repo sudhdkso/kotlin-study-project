@@ -30,7 +30,7 @@ class CommnetServiceTest : BehaviorSpec ({
 
         every { commentRepository.save(any()) } returns createComment(content = content)
         every{ userService.findUserByEmail(any()) } returns createUser()
-        every { postService.findByBoardId(any()) } returns createBoard()
+        every { postService.findByPostId(any()) } returns createBoard()
 
         When("저장하면"){
             val actual = commnetService.save(request)
