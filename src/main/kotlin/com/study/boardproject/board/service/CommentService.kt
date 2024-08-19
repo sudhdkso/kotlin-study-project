@@ -15,15 +15,14 @@ class CommentService(
     private val userService: UserService
 ) {
 
-    fun save(requestDto: CommentRequestDto) : Comment{
+    fun save(requestDto: CommentRequestDto): Comment {
 
         val board = boardService.findByBoardId(requestDto.boardId)
         val writer = userService.findUserByEmail(requestDto.email)
 
         checkRequest(requestDto)
 
-        val savedComment = commnetRepository.save(requestDto.toEntity(board, writer))
-        return savedComment
+        return commnetRepository.save(requestDto.toEntity(board, writer))
     }
 
     fun update(commentId: Long, requestDto: CommentRequestDto): CommentResponseDto{
