@@ -1,9 +1,9 @@
 package com.study.boardproject.board.service
 
 import com.study.boardproject.board.dto.*
-import com.study.boardproject.board.entity.Board
-import com.study.boardproject.board.repository.BoardRepository
-import com.study.boardproject.board.repository.getByBoardId
+import com.study.boardproject.board.entity.Post
+import com.study.boardproject.board.repository.PostRepository
+import com.study.boardproject.board.repository.getByPostId
 import com.study.boardproject.util.constants.BoardConstants.MAX_CONTENT_LENGTH
 import com.study.boardproject.util.constants.BoardConstants.MAX_TITLE_LENGTH
 import org.springframework.data.domain.Pageable
@@ -11,64 +11,64 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
 @Service
-class BoardService(
-    private val boardRepository: BoardRepository,
+class PostService(
+    private val postRepository: PostRepository,
     private val userService: UserService,
     private val notificationService: NotificationService
 ) {
     // 생성
-    fun save(requestDto: BoardRequestDto): BoardResponseDto {
+    fun save(requestDto: PostRequestDto): PostResponseDto {
         val user = userService.findUserByEmail(requestDto.email)
 
         validateRequest(requestDto)
-        val board = boardRepository.save(requestDto.toEntity(user))
+        val board = postRepository.save(requestDto.toEntity(user))
 
-        return BoardResponseDto(board, user)
+        return PostResponseDto(board, user)
     }
 
-    fun findByBoardId(boardId: Long): Board = boardRepository.getByBoardId(boardId)
+    fun findByPostId(postId: Long): Post = postRepository.getByPostId(postId)
 
     //게시글 전체 조회는 최근 작성순 or 조회순 두가지
-    fun findAll(pageable: Pageable): List<BoardListResponseDto> {
-        return boardRepository.findByDeletedAtIsNull(pageable).map { it.toListDto() }.toList()
+    fun findAll(pageable: Pageable): List<PostListResponseDto> {
+        return postRepository.findByDeletedAtIsNull(pageable).map { it.toListDto() }.toList()
     }
 
     //업데이트
-    fun update(boardId: Long, requestDto: BoardRequestDto): BoardResponseDto {
-        val board = findByBoardId(boardId)
+    fun update(postId: Long, requestDto: PostRequestDto): PostResponseDto {
+        val post = findByPostId(postId)
 
-        checkEditableBoard(board)
+        checkEditablePost(post)
         validateRequest(requestDto)
 
-        board.update(requestDto)
-        val savedBoard = boardRepository.save(board)
+        post.update(requestDto)
+        val savedBoard = postRepository.save(post)
         return savedBoard.toDto()
     }
 
     //삭제
-    fun deleteByBoardId(boardId: Long) {
-        val board = findByBoardId(boardId)
+    fun deleteByPostId(postId: Long) {
+        val post = findByPostId(postId)
         //soft delete
-        board.delete()
-        boardRepository.save(board)
+        post.delete()
+        postRepository.save(post)
     }
 
-    fun search(query: String): List<BoardResponseDto> {
-        val boardList = boardRepository.searchByTitleOrContent(query)
-        return boardList.map { it.toDto() }
+    fun search(query: String): List<PostResponseDto> {
+        val postList = postRepository.searchByTitleOrContent(query)
+        return postList.map { it.toDto() }
     }
 
     fun viewCountup(boardId: Long) {
-        val board = findByBoardId(boardId)
+        val board = findByPostId(boardId)
         board.viewCountUp()
-        boardRepository.save(board)
+        postRepository.save(board)
     }
 
-    fun findBoardWithEditDedlineSoon(): List<Board> {
+    fun findBoardWithEditDedlineSoon(): List<Post> {
         val now = LocalDateTime.now()
         val nineDaysAgo = now.minusDays(9)
         val tenDaysAgo = now.minusDays(10)
-        return boardRepository.findWithEditPeriodImminent(nineDaysAgo, tenDaysAgo)
+        return postRepository.findWithEditPeriodImminent(nineDaysAgo, tenDaysAgo)
     }
 
     fun sendEditDeadlineNotifications() {
@@ -76,13 +76,13 @@ class BoardService(
         boards.forEach { board -> notificationService.sendEditDeadlineNotification(board) }
     }
 
-    private fun checkEditableBoard(board: Board) {
-        require(board.canEditBoard()) {
+    private fun checkEditablePost(post: Post) {
+        require(post.canEditPost()) {
             "게시글 작성 10일 지나 게시글 수정이 불가능합니다."
         }
     }
 
-    private fun validateRequest(request: BoardRequestDto) {
+    private fun validateRequest(request: PostRequestDto) {
         require(request.title.length <= MAX_TITLE_LENGTH) {
             "게시글의 제목은 200자 이하로 작성해주세요."
         }

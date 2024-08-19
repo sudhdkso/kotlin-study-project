@@ -26,7 +26,7 @@ class User(email: String, name: String, password:String? = null, phoneNumber: St
 
     @OneToMany(mappedBy = "writer")
     @JsonIgnore
-    val boardList :MutableList<Board> = mutableListOf()
+    val boardList :MutableList<Post> = mutableListOf()
 
     fun update(name: String? = null, password: String? = null, phoneNumber: String? = null) {
         this.name = name ?: this.name

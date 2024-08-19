@@ -3,9 +3,9 @@ package com.study.boardproject.board.service
 import com.study.boardproject.board.createBoard
 import com.study.boardproject.board.createBoardRequest
 import com.study.boardproject.board.createUser
-import com.study.boardproject.board.entity.Board
-import com.study.boardproject.board.repository.BoardRepository
-import com.study.boardproject.board.repository.getByBoardId
+import com.study.boardproject.board.entity.Post
+import com.study.boardproject.board.repository.PostRepository
+import com.study.boardproject.board.repository.getByPostId
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -17,22 +17,22 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-class BoardServiceTest : BehaviorSpec({
+class PostServiceTest : BehaviorSpec({
 
-    val boardRepository: BoardRepository = mockk(relaxed = true)
+    val postRepository: PostRepository = mockk(relaxed = true)
     val userService: UserService = mockk()
     val notificationService: NotificationService = mockk()
-    val boardService = BoardService(boardRepository, userService, notificationService)
+    val postService = PostService(postRepository, userService, notificationService)
 
     Given("사용자와 게시글이 모두 유효한 경우") {
         val title = "테스트1"
         val request = createBoardRequest()
 
         every { userService.findUserByEmail(any()) } returns createUser()
-        every { boardRepository.save(any()) } returns createBoard(title = title)
+        every { postRepository.save(any()) } returns createBoard(title = title)
 
         When("저장하면") {
-            val actual = boardService.save(request)
+            val actual = postService.save(request)
             Then("성공한다.") {
                 actual.title shouldBe title
             }
@@ -46,7 +46,7 @@ class BoardServiceTest : BehaviorSpec({
             val request = createBoardRequest(title)
             Then("예외를 반환한다."){
                 shouldThrow<IllegalArgumentException> {
-                    boardService.save(request)
+                    postService.save(request)
                 }
             }
         }
@@ -55,7 +55,7 @@ class BoardServiceTest : BehaviorSpec({
             val request = createBoardRequest(content = content)
             Then("예외를 반환한다."){
                 shouldThrow<IllegalArgumentException> {
-                    boardService.save(request)
+                    postService.save(request)
                 }
             }
         }
@@ -64,7 +64,7 @@ class BoardServiceTest : BehaviorSpec({
             val request = createBoardRequest(title = title)
             Then("예외를 반환한다.") {
                 shouldThrow<IllegalArgumentException> {
-                    boardService.save(request)
+                    postService.save(request)
                 }
             }
         }
@@ -74,7 +74,7 @@ class BoardServiceTest : BehaviorSpec({
             val request = createBoardRequest(content = content)
             Then("예외를 반환한다.") {
                 shouldThrow<IllegalArgumentException> {
-                    boardService.save(request)
+                    postService.save(request)
                 }
             }
         }
@@ -84,25 +84,25 @@ class BoardServiceTest : BehaviorSpec({
 
         val title = "수정"
         val request = createBoardRequest(title = title)
-        val board = spyk<Board>(createBoard())
+        val board = spyk<Post>(createBoard())
         val boardId = 1L
 
         every { userService.findUserByEmail(any()) } returns createUser()
-        every { boardService.findByBoardId(any()) } returns board
+        every { postService.findByPostId(any()) } returns board
 
-        every { boardRepository.save(any()) } returns createBoard(title = title)
-        every { boardRepository.delete(any()) } just runs
+        every { postRepository.save(any()) } returns createBoard(title = title)
+        every { postRepository.delete(any()) } just runs
 
-        every { board.canEditBoard() } returns true
+        every { board.canEditPost() } returns true
         When("수정하면") {
-            val actual = boardService.update(boardId, request)
+            val actual = postService.update(boardId, request)
             Then("성공한다.") {
                 actual.title shouldBe title
             }
         }
 
         When("삭제하면") {
-            boardService.deleteByBoardId(boardId)
+            postService.deleteByPostId(boardId)
             Then("성공한다.") {
                 board.deletedAt shouldNotBe null
                 
@@ -114,25 +114,25 @@ class BoardServiceTest : BehaviorSpec({
         val title = "수정"
         val boardId = 1L
         val request = createBoardRequest(title = title)
-        every { boardRepository.getByBoardId(any()) } throws NoSuchElementException()
+        every { postRepository.getByPostId(any()) } throws NoSuchElementException()
         When("조회하려고 하면") {
             Then("예외를 반환한다.") {
                 shouldThrow<NoSuchElementException> {
-                    boardService.findByBoardId(boardId)
+                    postService.findByPostId(boardId)
                 }
             }
         }
         When("수정하려고 하면") {
             Then("예외를 반환한다.") {
                 shouldThrow<NoSuchElementException> {
-                    boardService.update(boardId, request)
+                    postService.update(boardId, request)
                 }
             }
         }
         When("삭제하려고 하면") {
             Then("예외를 반환한다.") {
                 shouldThrow<NoSuchElementException> {
-                    boardService.deleteByBoardId(boardId)
+                    postService.deleteByPostId(boardId)
                 }
             }
         }
@@ -141,18 +141,18 @@ class BoardServiceTest : BehaviorSpec({
     Given("10일이 지난 게시글을") {
         val title = "수정"
         val request = createBoardRequest(title = title)
-        val board = spyk<Board>(createBoard())
+        val board = spyk<Post>(createBoard())
         val boardId = 1L
 
         every { userService.findUserByEmail(any()) } returns createUser()
-        every { boardService.findByBoardId(any()) } returns board
+        every { postService.findByPostId(any()) } returns board
 
-        every { board.canEditBoard() } returns false
+        every { board.canEditPost() } returns false
 
         When("수정하려고 하면") {
             Then("예외가 발생한다."){
                 shouldThrow<IllegalArgumentException> {
-                    boardService.update(boardId, request)
+                    postService.update(boardId, request)
                 }
             }
         }

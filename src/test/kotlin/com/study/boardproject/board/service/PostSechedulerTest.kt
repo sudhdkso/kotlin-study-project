@@ -12,18 +12,18 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
-class BoardSechedulerTest() : BehaviorSpec({
+class PostSechedulerTest() : BehaviorSpec({
 
     Given("작성한지 9일된 게시글은") {
         val board = createBoard()
         val notificationService: NotificationService =  mockk(relaxed = true)
-        val boardService: BoardService = spyk<BoardService>(BoardService( mockk(), mockk(), notificationService))
-        val boardSecheduler: BoardScheduler = BoardScheduler(boardService)
+        val postService: PostService = spyk<PostService>(PostService( mockk(), mockk(), notificationService))
+        val postSecheduler: PostScheduler = PostScheduler(postService)
 
-        every { boardService.findBoardWithEditDedlineSoon() } returns listOf(board)
+        every { postService.findBoardWithEditDedlineSoon() } returns listOf(board)
 
         When("스케쥴러를 통해서"){
-            boardSecheduler.notifyEditDeadline()
+            postSecheduler.notifyEditDeadline()
             Then("알림 전송이 호출된다."){
                verify { notificationService.sendEditDeadlineNotification(board) }
             }

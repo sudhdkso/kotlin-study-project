@@ -5,7 +5,7 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "comment")
-class Comment(content: String, depth: Int, board: Board, writer: User) : BaseEntity() {
+class Comment(content: String, depth: Int, post: Post, writer: User) : BaseEntity() {
     @Id
     @GeneratedValue
     val id: Long? = null
@@ -16,9 +16,9 @@ class Comment(content: String, depth: Int, board: Board, writer: User) : BaseEnt
     @Column(nullable = false)
     val depth: Int = depth
 
-    @JoinColumn(name = "boardId", referencedColumnName = "id", insertable = true, updatable = false)
+    @JoinColumn(name = "postId", referencedColumnName = "id", insertable = true, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    val board: Board? = board
+    val post: Post? = post
 
     @JoinColumn(name = "userId", referencedColumnName = "id", insertable = true, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)

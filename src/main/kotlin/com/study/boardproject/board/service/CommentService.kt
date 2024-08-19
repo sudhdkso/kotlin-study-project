@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service
 @Service
 class CommentService(
     private val commnetRepository: CommentRepository,
-    private val boardService: BoardService,
+    private val postService: PostService,
     private val userService: UserService
 ) {
 
     fun save(requestDto: CommentRequestDto): Comment {
 
-        val board = boardService.findByBoardId(requestDto.boardId)
+        val board = postService.findByPostId(requestDto.boardId)
         val writer = userService.findUserByEmail(requestDto.email)
 
         checkRequest(requestDto)

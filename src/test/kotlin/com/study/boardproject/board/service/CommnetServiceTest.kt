@@ -19,10 +19,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 class CommnetServiceTest : BehaviorSpec ({
 
     val commentRepository: CommentRepository = mockk()
-    val boardService : BoardService = mockk()
+    val postService : PostService = mockk()
     val userService: UserService = mockk()
 
-    val commnetService: CommentService = CommentService(commentRepository, boardService, userService)
+    val commnetService: CommentService = CommentService(commentRepository, postService, userService)
 
     Given("댓글 작성 요청이 유효한 요청이면"){
         val content = "댓글1"
@@ -30,7 +30,7 @@ class CommnetServiceTest : BehaviorSpec ({
 
         every { commentRepository.save(any()) } returns createComment(content = content)
         every{ userService.findUserByEmail(any()) } returns createUser()
-        every { boardService.findByBoardId(any()) } returns createBoard()
+        every { postService.findByBoardId(any()) } returns createBoard()
 
         When("저장하면"){
             val actual = commnetService.save(request)
