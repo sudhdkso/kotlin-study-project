@@ -1,6 +1,6 @@
 package com.study.boardproject.board.service
 
-import com.study.boardproject.board.createBoard
+import com.study.boardproject.board.createPost
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import io.mockk.mockk
@@ -15,7 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 class PostSechedulerTest() : BehaviorSpec({
 
     Given("작성한지 9일된 게시글은") {
-        val board = createBoard()
+        val board = createPost()
         val notificationService: NotificationService =  mockk(relaxed = true)
         val postService: PostService = spyk<PostService>(PostService( mockk(), mockk(), notificationService))
         val postSecheduler: PostScheduler = PostScheduler(postService)

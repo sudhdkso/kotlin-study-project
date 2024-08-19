@@ -10,7 +10,7 @@ private val DEPTH = 0
 private val POST_ID = 1L;
 
 private val WRITER: User = createUser()
-private val POST: Post = createBoard()
+private val POST: Post = createPost()
 fun createCommentRequest(content:String = CONTENT, depth:Int = DEPTH, postId:Long = POST_ID) : CommentRequestDto
  = CommentRequestDto(content, depth, postId, EMAIL)
 

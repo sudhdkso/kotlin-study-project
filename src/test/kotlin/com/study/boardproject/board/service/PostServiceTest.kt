@@ -1,7 +1,7 @@
 package com.study.boardproject.board.service
 
-import com.study.boardproject.board.createBoard
-import com.study.boardproject.board.createBoardRequest
+import com.study.boardproject.board.createPost
+import com.study.boardproject.board.createPostRequest
 import com.study.boardproject.board.createUser
 import com.study.boardproject.board.entity.Post
 import com.study.boardproject.board.repository.PostRepository
@@ -26,10 +26,10 @@ class PostServiceTest : BehaviorSpec({
 
     Given("사용자와 게시글이 모두 유효한 경우") {
         val title = "테스트1"
-        val request = createBoardRequest()
+        val request = createPostRequest()
 
         every { userService.findUserByEmail(any()) } returns createUser()
-        every { postRepository.save(any()) } returns createBoard(title = title)
+        every { postRepository.save(any()) } returns createPost(title = title)
 
         When("저장하면") {
             val actual = postService.save(request)
@@ -43,7 +43,7 @@ class PostServiceTest : BehaviorSpec({
         every { userService.findUserByEmail(any()) } returns createUser()
         When("제목을 200자 초과로 작성하면") {
             val title = "a".repeat(201)
-            val request = createBoardRequest(title)
+            val request = createPostRequest(title)
             Then("예외를 반환한다."){
                 shouldThrow<IllegalArgumentException> {
                     postService.save(request)
@@ -52,7 +52,7 @@ class PostServiceTest : BehaviorSpec({
         }
         When("내용을 1000자 초과로 작성하면") {
             val content = "b".repeat(10001)
-            val request = createBoardRequest(content = content)
+            val request = createPostRequest(content = content)
             Then("예외를 반환한다."){
                 shouldThrow<IllegalArgumentException> {
                     postService.save(request)
@@ -61,7 +61,7 @@ class PostServiceTest : BehaviorSpec({
         }
         When("제목을 빈값으로 저장하면") {
             val title = ""
-            val request = createBoardRequest(title = title)
+            val request = createPostRequest(title = title)
             Then("예외를 반환한다.") {
                 shouldThrow<IllegalArgumentException> {
                     postService.save(request)
@@ -71,7 +71,7 @@ class PostServiceTest : BehaviorSpec({
 
         When("내용을 빈값으로 저장하면") {
             val content = ""
-            val request = createBoardRequest(content = content)
+            val request = createPostRequest(content = content)
             Then("예외를 반환한다.") {
                 shouldThrow<IllegalArgumentException> {
                     postService.save(request)
@@ -83,14 +83,14 @@ class PostServiceTest : BehaviorSpec({
     Given("게시글이 유효한 경우") {
 
         val title = "수정"
-        val request = createBoardRequest(title = title)
-        val board = spyk<Post>(createBoard())
+        val request = createPostRequest(title = title)
+        val board = spyk<Post>(createPost())
         val boardId = 1L
 
         every { userService.findUserByEmail(any()) } returns createUser()
         every { postService.findByPostId(any()) } returns board
 
-        every { postRepository.save(any()) } returns createBoard(title = title)
+        every { postRepository.save(any()) } returns createPost(title = title)
         every { postRepository.delete(any()) } just runs
 
         every { board.canEditPost() } returns true
@@ -113,7 +113,7 @@ class PostServiceTest : BehaviorSpec({
     Given("존재하지 않는 게시글을") {
         val title = "수정"
         val boardId = 1L
-        val request = createBoardRequest(title = title)
+        val request = createPostRequest(title = title)
         every { postRepository.getByPostId(any()) } throws NoSuchElementException()
         When("조회하려고 하면") {
             Then("예외를 반환한다.") {
@@ -140,8 +140,8 @@ class PostServiceTest : BehaviorSpec({
 
     Given("10일이 지난 게시글을") {
         val title = "수정"
-        val request = createBoardRequest(title = title)
-        val board = spyk<Post>(createBoard())
+        val request = createPostRequest(title = title)
+        val board = spyk<Post>(createPost())
         val boardId = 1L
 
         every { userService.findUserByEmail(any()) } returns createUser()

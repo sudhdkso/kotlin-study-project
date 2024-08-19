@@ -1,7 +1,7 @@
 package com.study.boardproject.board.service
 
 
-import com.study.boardproject.board.createBoard
+import com.study.boardproject.board.createPost
 import com.study.boardproject.board.createComment
 import com.study.boardproject.board.createCommentRequest
 import com.study.boardproject.board.createUser
@@ -30,7 +30,7 @@ class CommnetServiceTest : BehaviorSpec ({
 
         every { commentRepository.save(any()) } returns createComment(content = content)
         every{ userService.findUserByEmail(any()) } returns createUser()
-        every { postService.findByPostId(any()) } returns createBoard()
+        every { postService.findByPostId(any()) } returns createPost()
 
         When("저장하면"){
             val actual = commnetService.save(request)
