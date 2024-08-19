@@ -1,14 +1,14 @@
 package com.study.boardproject.board.entity
 
-import com.study.boardproject.board.dto.BoardRequestDto
+import com.study.boardproject.board.dto.PostRequestDto
 import com.study.boardproject.util.constants.BoardConstants.EDITABLE_PERIOD_DAYS
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @Entity
-@Table(name = "board")
-class Board(title: String, content: String, writer: User) : BaseEntity() {
+@Table(name = "post")
+class Post(title: String, content: String, writer: User) : BaseEntity() {
     @Id
     @GeneratedValue
     val id: Long? = null
@@ -26,13 +26,13 @@ class Board(title: String, content: String, writer: User) : BaseEntity() {
     @Column
     var viewCount : Long = 0
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "post")
     val commentList : MutableList<Comment> = mutableListOf()
 
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null
 
-    fun update(requestDto: BoardRequestDto) {
+    fun update(requestDto: PostRequestDto) {
         this.title = requestDto.title
         this.content = requestDto.content
     }
@@ -47,10 +47,10 @@ class Board(title: String, content: String, writer: User) : BaseEntity() {
         }
     }
 
-    fun canEditBoard() : Boolean {
+    fun canEditPost() : Boolean {
         val now = LocalDateTime.now()
-        val daysSinceCreation = ChronoUnit.DAYS.between(createdAt, now)
-        return daysSinceCreation <= EDITABLE_PERIOD_DAYS
+        val daysSinceCreation = ChronoUnit.DAYS.between(now, createdAt)
+        return daysSinceCreation < EDITABLE_PERIOD_DAYS
     }
 
     fun viewCountUp(){

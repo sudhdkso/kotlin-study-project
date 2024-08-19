@@ -1,13 +1,13 @@
 package com.study.boardproject.board.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.study.boardproject.board.entity.Board
+import com.study.boardproject.board.entity.Post
 import com.study.boardproject.board.entity.User
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import java.time.LocalDateTime
 
-data class BoardRequestDto(
+data class PostRequestDto(
     @field:NotBlank(message = "title is empty")
     @field:Size(min = 1, max = 20, message = "The length of the title must be 1 to 20")
     @JsonProperty("title")
@@ -26,29 +26,29 @@ data class BoardRequestDto(
     val content: String
         get() = _content!!
 
-    fun toEntity(user: User) : Board {
-        return Board(title, content, user)
+    fun toEntity(user: User) : Post {
+        return Post(title, content, user)
     }
 }
 
-data class BoardListResponseDto(
+data class PostListResponseDto(
     val id: Long,
     val title:String,
     val viewCount: Long,
     val createdAt : LocalDateTime,
     val writerName: String
 ) {
-    constructor(board: Board, user: User) : this(
-        board.id ?: -1,
-        board.title ?: "Default Title",
-        board.viewCount,
-        board.createdAt ?: LocalDateTime.now(),
+    constructor(post: Post, user: User) : this(
+        post.id ?: -1,
+        post.title ?: "Default Title",
+        post.viewCount,
+        post.createdAt ?: LocalDateTime.now(),
         user.name) {
 
     }
 }
 
-data class BoardResponseDto(
+data class PostResponseDto(
     val id: Long,
     val title: String,
     val content: String,
@@ -59,25 +59,25 @@ data class BoardResponseDto(
     val writerEmail: String,
     val writerName: String){
 
-    constructor(board: Board, user: User) : this(
-        board.id ?: -1,
-        board.title ?: "Default Title",
-        board.content ?: "Default Content",
-        board.viewCount,
-        board.calculateEditableDaysRemaining(),
-        board.createdAt ?: LocalDateTime.now(),
-        board.modifiedAt ?: LocalDateTime.now(),
+    constructor(post: Post, user: User) : this(
+        post.id ?: -1,
+        post.title ?: "Default Title",
+        post.content ?: "Default Content",
+        post.viewCount,
+        post.calculateEditableDaysRemaining(),
+        post.createdAt ?: LocalDateTime.now(),
+        post.modifiedAt ?: LocalDateTime.now(),
         user.email,
         user.name) {
 
     }
 }
 
-fun Board.toDto() : BoardResponseDto = BoardResponseDto(
+fun Post.toDto() : PostResponseDto = PostResponseDto(
     this,
     User( email = writer?.email ?: "unknown@example.com", name = writer?.name ?: "Unknown Writer")
 )
-fun Board.toListDto(): BoardListResponseDto = BoardListResponseDto(
+fun Post.toListDto(): PostListResponseDto = PostListResponseDto(
     this,
     User( email = writer?.email ?: "unknown@example.com", name = writer?.name ?: "Unknown Writer")
 )

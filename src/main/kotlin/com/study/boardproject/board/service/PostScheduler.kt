@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component
 
 @EnableScheduling
 @Component
-class BoardScheduler(private val boardService: BoardService) {
+class PostScheduler(private val postService: PostService) {
 
     @Scheduled(cron = "0 0 0 * * ?")
     fun notifyEditDeadline() {
-        boardService.sendEditDeadlineNotifications()
+        postService.sendEditDeadlineNotifications()
     }
 }
