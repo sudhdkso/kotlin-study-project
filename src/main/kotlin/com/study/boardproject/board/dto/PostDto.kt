@@ -1,20 +1,25 @@
 package com.study.boardproject.board.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.entity.Post
 import com.study.boardproject.board.entity.User
+import com.study.boardproject.util.constants.BoardConstants.MAX_CONTENT_LENGTH
+import com.study.boardproject.util.constants.BoardConstants.MAX_TITLE_LENGTH
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import java.time.LocalDateTime
 
 data class PostRequestDto(
+    val boardId: Long,
+
     @field:NotBlank(message = "title is empty")
-    @field:Size(min = 1, max = 20, message = "The length of the title must be 1 to 20")
+    @field:Size(min = 1, max = MAX_TITLE_LENGTH, message = "The length of the title must be 1 to ${MAX_TITLE_LENGTH}")
     @JsonProperty("title")
     private val _title: String?,
 
     @field:NotBlank(message = "content is empty")
-    @field:Size(min = 1, max = Int.MAX_VALUE, message = "The length of the content must be 1 to Int.MAX_VALUE")
+    @field:Size(min = 1, max = MAX_CONTENT_LENGTH, message = "The length of the content must be 1 to ${MAX_CONTENT_LENGTH}")
     @JsonProperty("content")
     private val _content: String?,
 
@@ -26,8 +31,8 @@ data class PostRequestDto(
     val content: String
         get() = _content!!
 
-    fun toEntity(user: User) : Post {
-        return Post(title, content, user)
+    fun toEntity(user: User, board: Board) : Post {
+        return Post(title, content, user, board)
     }
 }
 

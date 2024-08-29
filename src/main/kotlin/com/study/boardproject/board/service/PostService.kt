@@ -1,11 +1,13 @@
 package com.study.boardproject.board.service
 
 import com.study.boardproject.board.dto.*
+import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.entity.Post
 import com.study.boardproject.board.repository.PostRepository
 import com.study.boardproject.board.repository.getByPostId
 import com.study.boardproject.util.constants.BoardConstants.MAX_CONTENT_LENGTH
 import com.study.boardproject.util.constants.BoardConstants.MAX_TITLE_LENGTH
+import jakarta.transaction.Transactional
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -14,16 +16,20 @@ import java.time.LocalDateTime
 class PostService(
     private val postRepository: PostRepository,
     private val userService: UserService,
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
+    private val boardService: BoardService
 ) {
-    // 생성
+
+    @Transactional
     fun save(requestDto: PostRequestDto): PostResponseDto {
         val user = userService.findUserByEmail(requestDto.email)
+        val board = boardService.findByBoardId(requestDto.boardId)
 
         validateRequest(requestDto)
-        val board = postRepository.save(requestDto.toEntity(user))
+        val post = postRepository.save(requestDto.toEntity(user,board))
 
-        return PostResponseDto(board, user)
+        board.addPost(post)
+        return PostResponseDto(post, user)
     }
 
     fun findByPostId(postId: Long): Post = postRepository.getByPostId(postId)
@@ -34,23 +40,28 @@ class PostService(
     }
 
     //업데이트
+    @Transactional
     fun update(postId: Long, requestDto: PostRequestDto): PostResponseDto {
         val post = findByPostId(postId)
+        val board = boardService.findByBoardId(requestDto.boardId)
 
         checkEditablePost(post)
         validateRequest(requestDto)
 
+        if(isBoardChanged(post.board, board)){
+            post.updateBoard(board)
+        }
+
         post.update(requestDto)
-        val savedBoard = postRepository.save(post)
-        return savedBoard.toDto()
+        return post.toDto()
     }
 
     //삭제
+    @Transactional
     fun deleteByPostId(postId: Long) {
         val post = findByPostId(postId)
         //soft delete
         post.delete()
-        postRepository.save(post)
     }
 
     fun search(query: String): List<PostResponseDto> {
@@ -58,10 +69,10 @@ class PostService(
         return postList.map { it.toDto() }
     }
 
-    fun viewCountup(boardId: Long) {
-        val board = findByPostId(boardId)
-        board.viewCountUp()
-        postRepository.save(board)
+    @Transactional
+    fun viewCountup(postId: Long) {
+        val post = findByPostId(postId)
+        post.viewCountUp()
     }
 
     fun findBoardWithEditDedlineSoon(): List<Post> {
@@ -94,6 +105,10 @@ class PostService(
         require(request.title.isNotBlank() && request.content.isNotBlank()) {
             "작성하지 않은 항목이 존재합니다."
         }
+    }
+
+    private fun isBoardChanged(oldBoard: Board?, newBoard: Board): Boolean {
+        return oldBoard != newBoard
     }
 }
 

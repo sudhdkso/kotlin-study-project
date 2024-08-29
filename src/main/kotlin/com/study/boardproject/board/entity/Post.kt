@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit
 
 @Entity
 @Table(name = "post")
-class Post(title: String, content: String, writer: User) : BaseEntity() {
+class Post(title: String, content: String, writer: User, board:Board) : BaseEntity() {
     @Id
     @GeneratedValue
     val id: Long? = null
@@ -29,14 +29,24 @@ class Post(title: String, content: String, writer: User) : BaseEntity() {
     @OneToMany(mappedBy = "post")
     val commentList : MutableList<Comment> = mutableListOf()
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    var board: Board? = null
+
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null
 
     fun update(requestDto: PostRequestDto) {
         this.title = requestDto.title
         this.content = requestDto.content
+        this.board = board
     }
 
+    fun updateBoard(board: Board){
+        this.board ?.removePost(this)
+        board.addPost(this)
+        this.board = board
+    }
     fun calculateEditableDaysRemaining(): Long {
         val now = LocalDateTime.now()
         val daysSinceCreation = ChronoUnit.DAYS.between(createdAt, now)

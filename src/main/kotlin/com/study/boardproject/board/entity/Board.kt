@@ -5,21 +5,18 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "board")
-class Board(title: String, description: String, minReadLevel: Int = 0, minWriteLevel: Int = 0) : BaseEntity() {
+class Board(
+    val title: String,
+    var description: String,
+    var minReadLevel: Int = 0,
+    var minWriteLevel: Int = 0
+) : BaseEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
 
-    val title: String = title
-
-    var description: String = description
-
-    var minReadLevel = minReadLevel
-
-    var minWriteLevel = minWriteLevel
-
     @OneToMany(mappedBy = "board", cascade = [CascadeType.ALL])
-    var posts : MutableList<Post> = mutableListOf()
+    var posts: MutableList<Post> = mutableListOf()
 
     fun addPost(post: Post) {
         posts.add(post)
