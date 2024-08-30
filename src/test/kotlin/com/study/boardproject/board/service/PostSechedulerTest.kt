@@ -15,17 +15,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 class PostSechedulerTest() : BehaviorSpec({
 
     Given("작성한지 9일된 게시글은") {
-        val board = createPost()
+        val post = createPost()
         val notificationService: NotificationService =  mockk(relaxed = true)
-        val postService: PostService = spyk<PostService>(PostService( mockk(), mockk(), notificationService))
+        val postService: PostService = spyk<PostService>(PostService( mockk(), mockk(), notificationService, mockk()))
         val postSecheduler: PostScheduler = PostScheduler(postService)
 
-        every { postService.findBoardWithEditDedlineSoon() } returns listOf(board)
+        every { postService.findBoardWithEditDedlineSoon() } returns listOf(post)
 
         When("스케쥴러를 통해서"){
             postSecheduler.notifyEditDeadline()
             Then("알림 전송이 호출된다."){
-               verify { notificationService.sendEditDeadlineNotification(board) }
+               verify { notificationService.sendEditDeadlineNotification(post) }
             }
         }
     }
