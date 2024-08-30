@@ -5,6 +5,7 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.longs.shouldBeExactly
 import io.kotest.matchers.shouldBe
 import io.mockk.every
+import io.mockk.mockk
 import io.mockk.spyk
 import java.time.LocalDateTime
 
@@ -39,5 +40,19 @@ class PostTest: FunSpec({
             post.canEditPost() shouldBe false
         }
     }
-}) {
-}
+
+    context("게시글의 게시판을 수정하려고하면"){
+
+        val oldBoard = mockk<Board>(relaxed = true)
+        val newBoard = mockk<Board>(relaxed = true)
+        val post = createPost(board = oldBoard)
+
+        post.updateBoard(newBoard)
+
+        test("수정된다."){
+
+            post.board shouldBe newBoard
+        }
+    }
+
+})
