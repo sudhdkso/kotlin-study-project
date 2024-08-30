@@ -1,6 +1,7 @@
 package com.study.boardproject.board.entity
 
 import com.study.boardproject.board.createBoard
+import com.study.boardproject.board.createBoardUpdateRequest
 import com.study.boardproject.board.createPost
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
@@ -22,6 +23,27 @@ class BoardTest : FunSpec({
         }
         test("게시글의 게시판이 해당 게시판으로 설정된다.") {
             post.board shouldBe board
+        }
+    }
+
+    context("유효한 값을 가진 게시판이 있을 때, 게시판의 일부 값을 수정하면") {
+        val board = createBoard()
+        val description = "설명설명"
+        val minReadLevel = 1
+        val minWriteLevel = 3
+
+        val requestDto = createBoardUpdateRequest(
+            description = description,
+            minReadLevel = minReadLevel,
+            minWriteLevel = minWriteLevel
+        )
+        board.update(requestDto)
+
+
+        test("모두 값을 변경하려하면 모두 변경된다.") {
+            board.description shouldBe description
+            board.minReadLevel shouldBe minReadLevel
+            board.minWriteLevel shouldBe minWriteLevel
         }
     }
 
