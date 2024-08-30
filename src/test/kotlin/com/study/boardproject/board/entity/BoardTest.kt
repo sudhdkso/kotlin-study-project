@@ -7,6 +7,7 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.spyk
 
@@ -27,23 +28,45 @@ class BoardTest : FunSpec({
     }
 
     context("유효한 값을 가진 게시판이 있을 때, 게시판의 일부 값을 수정하면") {
-        val board = createBoard()
         val description = "설명설명"
         val minReadLevel = 1
         val minWriteLevel = 3
 
-        val requestDto = createBoardUpdateRequest(
-            description = description,
-            minReadLevel = minReadLevel,
-            minWriteLevel = minWriteLevel
-        )
-        board.update(requestDto)
-
 
         test("모두 값을 변경하려하면 모두 변경된다.") {
+            val board = createBoard()
+
+            val requestDto = createBoardUpdateRequest(
+                description = description,
+                minReadLevel = minReadLevel,
+                minWriteLevel = minWriteLevel
+            )
+
+            board.update(requestDto)
+
             board.description shouldBe description
             board.minReadLevel shouldBe minReadLevel
             board.minWriteLevel shouldBe minWriteLevel
+        }
+
+        test("일부 값만 변경되어 요청이 들어오면 변경된 값만 수정된다."){
+            val originDescription = "설명"
+            val originMinReadLevel = 0
+            val originMinWriteLevel = 0
+
+            val board = createBoard(description = originDescription, minReadLevel = originMinReadLevel, minWriteLevel = originMinWriteLevel)
+
+            val requestDto = createBoardUpdateRequest(
+                description = description,
+                minReadLevel = originMinReadLevel,
+                minWriteLevel = originMinWriteLevel
+            )
+
+            board.update(requestDto)
+
+            board.description shouldNotBe  originDescription
+            board.minReadLevel shouldBe originMinReadLevel
+            board.minWriteLevel shouldBe originMinWriteLevel
         }
     }
 
