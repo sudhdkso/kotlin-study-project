@@ -31,7 +31,7 @@ class Post(title: String, content: String, writer: User, board:Board) : BaseEnti
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
-    var board: Board? = null
+    var board: Board? = board
 
     @Column(name = "deleted_at")
     var deletedAt: LocalDateTime? = null

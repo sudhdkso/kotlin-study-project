@@ -43,12 +43,12 @@ data class PostListResponseDto(
     val createdAt : LocalDateTime,
     val writerName: String
 ) {
-    constructor(post: Post, user: User) : this(
+    constructor(post: Post, name:String) : this(
         post.id ?: -1,
         post.title ?: "Default Title",
         post.viewCount,
         post.createdAt ?: LocalDateTime.now(),
-        user.name) {
+        name) {
 
     }
 }
@@ -64,7 +64,7 @@ data class PostResponseDto(
     val writerEmail: String,
     val writerName: String){
 
-    constructor(post: Post, user: User) : this(
+    constructor(post: Post, email:String, name:String) : this(
         post.id ?: -1,
         post.title ?: "Default Title",
         post.content ?: "Default Content",
@@ -72,17 +72,18 @@ data class PostResponseDto(
         post.calculateEditableDaysRemaining(),
         post.createdAt ?: LocalDateTime.now(),
         post.modifiedAt ?: LocalDateTime.now(),
-        user.email,
-        user.name) {
+        email,
+        name) {
 
     }
 }
 
 fun Post.toDto() : PostResponseDto = PostResponseDto(
     this,
-    User( email = writer?.email ?: "unknown@example.com", name = writer?.name ?: "Unknown Writer")
+    email = writer?.email ?: "unknown@example.com",
+    name = writer?.name ?: "Unknown Writer"
 )
 fun Post.toListDto(): PostListResponseDto = PostListResponseDto(
     this,
-    User( email = writer?.email ?: "unknown@example.com", name = writer?.name ?: "Unknown Writer")
+     name = writer?.name ?: "Unknown Writer"
 )

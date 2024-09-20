@@ -11,13 +11,14 @@ import io.mockk.mockk
 import io.mockk.spyk
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 class UserServiceTest : BehaviorSpec({
     val userRepository: UserRepository = mockk()
-    val userService: UserService = spyk(UserService(userRepository))
+    val userService: UserService = spyk(UserService(BCryptPasswordEncoder(), userRepository))
 
     Given("유효한 값들로") {
         val name = "유효한"

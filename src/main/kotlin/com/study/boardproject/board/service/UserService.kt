@@ -7,10 +7,13 @@ import com.study.boardproject.board.entity.User
 import com.study.boardproject.board.repository.UserRepository
 import com.study.boardproject.board.repository.getByEmail
 import org.slf4j.LoggerFactory
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class UserService(val userRepository: UserRepository) {
+class UserService(private val encoder: PasswordEncoder,
+                  private val userRepository: UserRepository
+) {
     private val log = LoggerFactory.getLogger(UserService::class.java)
     fun findUserByEmail(email: String): User = userRepository.getByEmail(email)
 
@@ -18,7 +21,7 @@ class UserService(val userRepository: UserRepository) {
 
         checkUserInput(requestDto.email, requestDto.phoneNumber)
 
-        val user = userRepository.save(requestDto.toEntity())
+        val user = userRepository.save(requestDto.toEntity(encoder))
         log.info("Created User: username={}, email={}", user.name, user.email)
 
         return user.toDto()
