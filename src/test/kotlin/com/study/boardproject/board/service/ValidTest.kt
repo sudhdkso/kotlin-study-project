@@ -9,7 +9,7 @@ import io.mockk.mockk
 
 class ValidTest : FunSpec({
     val userRepository: UserRepository = mockk()
-    val userService = UserService(userRepository)
+    val userService = UserService(mockk(), userRepository)
 
 
     test("이메일 유효성 검사에서 올바르지 않은 여러 형식이 입력되면 올바른 boolean타입의 값을 return한다."){
