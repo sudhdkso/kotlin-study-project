@@ -26,10 +26,10 @@ class PostService(
         val board = boardService.findByBoardId(requestDto.boardId)
 
         validateRequest(requestDto)
-        val post = postRepository.save(requestDto.toEntity(user,board))
+        val post = postRepository.save(requestDto.toEntity(user, board))
 
         board.addPost(post)
-        return PostResponseDto(post, user)
+        return PostResponseDto(post, user.email, user.name)
     }
 
     fun findByPostId(postId: Long): Post = postRepository.getByPostId(postId)
@@ -48,7 +48,7 @@ class PostService(
         checkEditablePost(post)
         validateRequest(requestDto)
 
-        if(isBoardChanged(post.board, board)){
+        if (isBoardChanged(post.board, board)) {
             post.updateBoard(board)
         }
 

@@ -1,10 +1,13 @@
 package com.study.boardproject.board.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.study.boardproject.board.entity.enums.UserType
 import jakarta.persistence.*
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
-class User(email: String, name: String, password:String? = null, phoneNumber: String? = null) {
+class User(email: String, name: String, password:String, phoneNumber: String? = null) : UserDetails {
     @Id
     @GeneratedValue
     val id: Long? = null
@@ -17,8 +20,10 @@ class User(email: String, name: String, password:String? = null, phoneNumber: St
         protected set
 
     @Column(nullable = false)
-    var password = password
-        protected set
+    private var password = password
+
+    @Enumerated(EnumType.STRING)
+    var type: UserType = UserType.USER
 
     @Column(nullable = false)
     var phoneNumber = phoneNumber
@@ -34,5 +39,32 @@ class User(email: String, name: String, password:String? = null, phoneNumber: St
         this.phoneNumber = phoneNumber ?: this.phoneNumber
     }
 
-    constructor(email:String, name:String) : this(email, name, null, null)
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority>? {
+        return null
+    }
+
+    override fun getPassword(): String {
+        return password
+    }
+
+    override fun getUsername(): String {
+        return email
+    }
+
+    override fun isAccountNonExpired(): Boolean {
+        return true
+    }
+
+    override fun isAccountNonLocked(): Boolean {
+        return true
+    }
+
+    override fun isCredentialsNonExpired(): Boolean {
+        return true
+    }
+
+    override fun isEnabled(): Boolean {
+        return true
+    }
 }
+
