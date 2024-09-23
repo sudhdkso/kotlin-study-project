@@ -5,6 +5,7 @@ import com.study.boardproject.board.dto.PostRequestDto
 import com.study.boardproject.board.dto.PostResponseDto
 import com.study.boardproject.board.dto.toDto
 import com.study.boardproject.board.service.PostService
+import com.study.boardproject.core.annotation.CheckRequestUser
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -59,12 +60,14 @@ class PostController(private val postService: PostService) {
     }
 
     @PutMapping("/{id}")
+    @CheckRequestUser(entityIdParam = "id", entityType = "post")
     fun update(@PathVariable("id")postId: Long, @RequestBody @Valid requestDto: PostRequestDto) : ResponseEntity<PostResponseDto> {
         val postResponse = postService.update(postId, requestDto)
         return ResponseEntity.ok().body(postResponse)
     }
 
     @DeleteMapping("/{id}")
+    @CheckRequestUser(entityIdParam = "id", entityType = "post")
     fun delete(@PathVariable("id")postId: Long): ResponseEntity<Any> {
         postService.deleteByPostId(postId)
         return ResponseEntity.ok().body("게시글 삭제에 성공했습니다.")
