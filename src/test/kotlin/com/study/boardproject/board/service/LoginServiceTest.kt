@@ -13,8 +13,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -37,10 +36,7 @@ class LoginServiceTest : BehaviorSpec({
 
         every {userRepository.getByEmail(any())} returns mockUser
         every { tokenProvider.createToken(any()) } returns "mock-token"
-        every { authenticationManager.authenticate((any<UsernamePasswordAuthenticationToken>())) } returns mockk<Authentication>().apply {
-            every { isAuthenticated } returns true
-        }
-
+        every { userDetailService.loadUserByUsername(any()) } returns mockk<UserDetails>()
         When("로그인을 시도하면") {
             val result = loginService.login(request)
             Then("토큰이 발급된다.") {
