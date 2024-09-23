@@ -1,9 +1,12 @@
 package com.study.boardproject.core.configuration
 
+import com.study.boardproject.board.service.UserDetailService
 import com.study.boardproject.jwt.JwtAuthenticationFilter
 import com.study.boardproject.jwt.TokenProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -15,8 +18,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 class SecurityConfig(
     private val tokenProvider: TokenProvider,
-    private val entryPoint: AuthenticationEntryPoint
-) {
+    private val entryPoint: AuthenticationEntryPoint,
+    private val userDetailService : UserDetailService
+){
     private val whiteListURL = arrayOf("/","/signup","/login","/error")
 
     @Bean
@@ -29,11 +33,19 @@ class SecurityConfig(
         .headers { it.frameOptions { frameOptions -> frameOptions.sameOrigin() } }
         .authorizeHttpRequests {
             it.requestMatchers(*whiteListURL).permitAll()
-                .requestMatchers("/api/**").hasAnyAuthority("USER")
+                .requestMatchers("/api/**").hasRole("USER")
         }
         .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
         .addFilterBefore(JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
         .exceptionHandling { it.authenticationEntryPoint(entryPoint) }
         .build()
+
+    @Bean
+    fun authenticationManager(http: HttpSecurity): AuthenticationManager {
+        val auth = http.getSharedObject(AuthenticationManagerBuilder::class.java)
+        auth.userDetailsService(userDetailService)
+            .passwordEncoder(passwordEncoder())
+        return auth.build()
+    }
 
 }

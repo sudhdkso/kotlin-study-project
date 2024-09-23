@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.study.boardproject.board.entity.enums.UserType
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
@@ -39,8 +40,8 @@ class User(email: String, name: String, password:String, phoneNumber: String? = 
         this.phoneNumber = phoneNumber ?: this.phoneNumber
     }
 
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority>? {
-        return null
+    override fun getAuthorities(): MutableCollection<GrantedAuthority>? {
+        return mutableListOf(SimpleGrantedAuthority(type.role))
     }
 
     override fun getPassword(): String {

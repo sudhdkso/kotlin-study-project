@@ -1,4 +1,4 @@
 jwt:
   secret-key: 95e1393f88de0d6835c9c6e61e8b68bc988c16b0999eb3be05bcbfe324335f4d51fd774fda8213faa13928cc06dd7dd728a2aadf037ee64cb0fc75a3249f7fb1
-  access-token-expire-time: 300
+  access-token-expire-time: 86400000
   refresh-token-expire-time: 7200
