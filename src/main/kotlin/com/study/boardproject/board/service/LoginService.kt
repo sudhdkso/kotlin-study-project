@@ -6,8 +6,7 @@ import com.study.boardproject.board.repository.UserRepository
 import com.study.boardproject.board.repository.getByEmail
 import com.study.boardproject.jwt.TokenProvider
 import jakarta.transaction.Transactional
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -17,7 +16,8 @@ import org.springframework.stereotype.Service
 class LoginService(
     private val encoder: PasswordEncoder,
     private val userRepository: UserRepository,
-    private val authenticationManagerBuilder: AuthenticationManagerBuilder,
+    private val authenticationManager: AuthenticationManager,
+    private val userDetailService: UserDetailService,
     private val tokenProvider: TokenProvider
 ) {
 
@@ -27,9 +27,8 @@ class LoginService(
             .takeIf { encoder.matches(requestDto.password, it.password) }
             ?: throw IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.")
 
-        val authenticationToken = UsernamePasswordAuthenticationToken(requestDto.email, requestDto.password)
-        val authentication = authenticationManagerBuilder.build().authenticate(authenticationToken)
+        val userDetails = userDetailService.loadUserByUsername(requestDto.email)
 
-        return LoginResponseDto(user.email, tokenProvider.createToken(authentication))
+        return LoginResponseDto(user.email, tokenProvider.createToken(userDetails))
     }
 }

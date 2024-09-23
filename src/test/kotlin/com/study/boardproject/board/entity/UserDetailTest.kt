@@ -1,7 +1,9 @@
 package com.study.boardproject.board.entity
 
+import com.study.boardproject.board.entity.enums.Role
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 class UserDetailTest: StringSpec({
     "getUsername은 email을 return한다." {
@@ -17,10 +19,10 @@ class UserDetailTest: StringSpec({
         user.password shouldBe "password"
     }
 
-    "getAuthorities는 null을 return한다." {
-        val user = User("detail@example.com", "test", "password")
+    "getAuthorities는 User을 return한다." {
+        val user = User("detail@example.com", "test", "password", role = Role.USER)
 
-        user.authorities shouldBe null
+        user.authorities shouldBe mutableListOf(SimpleGrantedAuthority(Role.USER.type))
     }
 
     "isAccountNonExpired는 true를 return한다." {

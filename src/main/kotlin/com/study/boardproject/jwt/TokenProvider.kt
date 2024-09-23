@@ -4,10 +4,12 @@ import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.security.Keys
 import jakarta.servlet.http.HttpServletRequest
 import org.hibernate.query.sqm.tree.SqmNode.log
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.PropertySource
+import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
@@ -28,8 +30,9 @@ class TokenProvider(
     private val userDetailsService: UserDetailsService
 ) {
 
-    fun createToken(authentication: Authentication): String {
-        val claims = Jwts.claims().setSubject(authentication.getName())
+    private val key = Keys.hmacShaKeyFor(secretKey.toByteArray())
+    fun createToken(userDetails: UserDetails): String {
+        val claims = Jwts.claims().setSubject(userDetails.username)
         val now = Date()
         val expireDate = Date(now.time + accessExpireTime)
 
@@ -37,28 +40,28 @@ class TokenProvider(
             .setClaims(claims)
             .setIssuedAt(now)
             .setExpiration(expireDate)
-            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .signWith(key, SignatureAlgorithm.HS256)
             .compact()
     }
 
-    fun createRefreshToken(authentication: Authentication): String {
-        val claims = Jwts.claims().setSubject(authentication.name)
+    fun createRefreshToken(userDetails: UserDetails): String {
+        val claims = Jwts.claims().setSubject(userDetails.username)
         val now = Date()
         val expireDate = Date(now.time + refreshExpireTime)
         val refreshToken = Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
             .setExpiration(expireDate)
-            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .signWith(key, SignatureAlgorithm.HS256)
             .compact()
 
         return refreshToken
     }
 
-    fun getEmail(token: String?) : String {
+    fun getEmail(token: String?): String {
         return Jwts
             .parserBuilder()
-            .setSigningKey(secretKey)
+            .setSigningKey(key)
             .build()
             .parseClaimsJws(token)
             .body
@@ -66,7 +69,7 @@ class TokenProvider(
     }
 
     fun getAuthentication(token: String?): Authentication {
-        val userPrincipal = Jwts.parserBuilder().setSigningKey(secretKey)
+        val userPrincipal = Jwts.parserBuilder().setSigningKey(key)
             .build()
             .parseClaimsJws(token)
             .body.subject
@@ -74,17 +77,13 @@ class TokenProvider(
         return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
     }
 
-    fun resolveToken(req: HttpServletRequest): String? {
-        val bearerToken = req.getHeader("Authorization")
-        return if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            bearerToken.substring(7)
-        } else null
-    }
+    fun resolveToken(req: HttpServletRequest): String? = req.getHeader(HttpHeaders.AUTHORIZATION)
+        .takeIf { it?.startsWith("Bearer ", true) ?: false }?.substring(7)
 
     fun validateToken(token: String?): Boolean {
         return try {
             Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(key)
                 .build().parseClaimsJws(token)
             true
         } catch (e: ExpiredJwtException) {

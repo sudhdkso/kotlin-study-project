@@ -12,9 +12,8 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.core.Authentication
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -24,9 +23,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 class LoginServiceTest : BehaviorSpec({
     val userRepository:UserRepository = mockk()
     val encoder : PasswordEncoder = BCryptPasswordEncoder()
-    var authenticationManagerBuilder: AuthenticationManagerBuilder = mockk()
+    val authenticationManager: AuthenticationManager = mockk()
+    val userDetailService: UserDetailService = mockk()
     val tokenProvider: TokenProvider = mockk()
-    val loginService = LoginService(encoder, userRepository, authenticationManagerBuilder, tokenProvider)
+    val loginService = LoginService(encoder, userRepository, authenticationManager, userDetailService, tokenProvider)
 
     Given("올바른 정보를 가지고") {
         val email = "login@example.com"
@@ -36,10 +36,7 @@ class LoginServiceTest : BehaviorSpec({
 
         every {userRepository.getByEmail(any())} returns mockUser
         every { tokenProvider.createToken(any()) } returns "mock-token"
-        every { authenticationManagerBuilder.build().authenticate(any<UsernamePasswordAuthenticationToken>()) } returns mockk<Authentication>().apply {
-            every { isAuthenticated } returns true
-        }
-
+        every { userDetailService.loadUserByUsername(any()) } returns mockk<UserDetails>()
         When("로그인을 시도하면") {
             val result = loginService.login(request)
             Then("토큰이 발급된다.") {
