@@ -29,14 +29,14 @@ class PostServiceTest : BehaviorSpec({
     Given("사용자와 게시글이 모두 유효한 경우") {
         val title = "테스트1"
         val request = createPostRequest()
-
+        val email = "test@example.com"
         every { userService.findUserByEmail(any()) } returns createUser()
         every { boardService.findByBoardId(any()) } returns board
         every { board.addPost(any()) } just runs
 
         every { postRepository.save(any()) } returns createPost(title = title)
         When("저장하면") {
-            val actual = postService.save(request)
+            val actual = postService.save(email, request)
             Then("성공한다.") {
                 actual.title shouldBe title
             }
@@ -44,6 +44,8 @@ class PostServiceTest : BehaviorSpec({
     }
 
     Given("게시글 내용이 유효하지 않는 경우") {
+        val email = "test@example.com"
+
         every { userService.findUserByEmail(any()) } returns createUser()
         every { boardService.findByBoardId(any()) } returns board
         When("제목을 200자 초과로 작성하면") {
@@ -51,7 +53,7 @@ class PostServiceTest : BehaviorSpec({
             val request = createPostRequest(title)
             Then("예외를 반환한다.") {
                 shouldThrow<IllegalArgumentException> {
-                    postService.save(request)
+                    postService.save(email, request)
                 }
             }
         }
@@ -60,7 +62,7 @@ class PostServiceTest : BehaviorSpec({
             val request = createPostRequest(content = content)
             Then("예외를 반환한다.") {
                 shouldThrow<IllegalArgumentException> {
-                    postService.save(request)
+                    postService.save(email, request)
                 }
             }
         }
@@ -69,7 +71,7 @@ class PostServiceTest : BehaviorSpec({
             val request = createPostRequest(title = title)
             Then("예외를 반환한다.") {
                 shouldThrow<IllegalArgumentException> {
-                    postService.save(request)
+                    postService.save(email, request)
                 }
             }
         }
@@ -79,7 +81,7 @@ class PostServiceTest : BehaviorSpec({
             val request = createPostRequest(content = content)
             Then("예외를 반환한다.") {
                 shouldThrow<IllegalArgumentException> {
-                    postService.save(request)
+                    postService.save(email, request)
                 }
             }
         }

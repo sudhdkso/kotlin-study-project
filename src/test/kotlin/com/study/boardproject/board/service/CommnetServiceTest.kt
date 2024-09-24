@@ -1,9 +1,9 @@
 package com.study.boardproject.board.service
 
 
-import com.study.boardproject.board.createPost
 import com.study.boardproject.board.createComment
 import com.study.boardproject.board.createCommentRequest
+import com.study.boardproject.board.createPost
 import com.study.boardproject.board.createUser
 import com.study.boardproject.board.repository.CommentRepository
 import io.kotest.core.spec.style.BehaviorSpec
@@ -27,13 +27,13 @@ class CommnetServiceTest : BehaviorSpec ({
     Given("댓글 작성 요청이 유효한 요청이면"){
         val content = "댓글1"
         val request = createCommentRequest(content = content)
-
+        val email = "test@example.com"
         every { commentRepository.save(any()) } returns createComment(content = content)
         every{ userService.findUserByEmail(any()) } returns createUser()
         every { postService.findByPostId(any()) } returns createPost()
 
         When("저장하면"){
-            val actual = commnetService.save(request)
+            val actual = commnetService.save(email, request)
             Then("성공한다."){
                 actual.content shouldBe content
             }
