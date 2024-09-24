@@ -8,7 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
-class User(email: String, name: String, password:String, phoneNumber: String? = null, role: Role = Role.USER) : UserDetails {
+class User(email: String, name: String, password: String, phoneNumber: String? = null, role:Role = Role.USER) :
+    UserDetails {
     @Id
     @GeneratedValue
     val id: Long? = null
@@ -24,7 +25,7 @@ class User(email: String, name: String, password:String, phoneNumber: String? = 
     private var password = password
 
     @Enumerated(EnumType.STRING)
-    var role: Role = role
+    var role : Role = role
 
     @Column(nullable = false)
     var phoneNumber = phoneNumber
@@ -32,7 +33,8 @@ class User(email: String, name: String, password:String, phoneNumber: String? = 
 
     @OneToMany(mappedBy = "writer")
     @JsonIgnore
-    val boardList :MutableList<Post> = mutableListOf()
+    val boardList: MutableList<Post> = mutableListOf()
+
 
     fun update(name: String? = null, password: String? = null, phoneNumber: String? = null) {
         this.name = name ?: this.name

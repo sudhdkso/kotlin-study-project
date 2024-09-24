@@ -6,6 +6,7 @@ import com.study.boardproject.board.dto.PostResponseDto
 import com.study.boardproject.board.dto.toDto
 import com.study.boardproject.board.service.PostService
 import com.study.boardproject.core.annotation.CheckRequestUser
+import com.study.boardproject.core.annotation.LoginUserEmail
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -24,8 +25,9 @@ import org.springframework.web.bind.annotation.*
 @Validated
 class PostController(private val postService: PostService) {
     @PostMapping
-    fun create(@RequestBody @Valid requestDto: PostRequestDto) : ResponseEntity<PostResponseDto>{
-        val postResponse = postService.save(requestDto)
+    fun create(@LoginUserEmail email: String, @RequestBody @Valid requestDto: PostRequestDto) : ResponseEntity<PostResponseDto>{
+
+        val postResponse = postService.save(email, requestDto)
         return ResponseEntity.ok().body(postResponse)
     }
 

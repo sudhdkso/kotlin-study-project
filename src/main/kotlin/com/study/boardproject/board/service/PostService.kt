@@ -5,6 +5,7 @@ import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.entity.Post
 import com.study.boardproject.board.repository.PostRepository
 import com.study.boardproject.board.repository.getByPostId
+import com.study.boardproject.core.annotation.LoginUserEmail
 import com.study.boardproject.util.constants.BoardConstants.MAX_CONTENT_LENGTH
 import com.study.boardproject.util.constants.BoardConstants.MAX_TITLE_LENGTH
 import jakarta.transaction.Transactional
@@ -21,8 +22,8 @@ class PostService(
 ) {
 
     @Transactional
-    fun save(requestDto: PostRequestDto): PostResponseDto {
-        val user = userService.findUserByEmail(requestDto.email)
+    fun save(@LoginUserEmail email: String, requestDto: PostRequestDto): PostResponseDto {
+        val user = userService.findUserByEmail(email)
         val board = boardService.findByBoardId(requestDto.boardId)
 
         validateRequest(requestDto)

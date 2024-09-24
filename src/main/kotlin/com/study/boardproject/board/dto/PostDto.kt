@@ -23,7 +23,6 @@ data class PostRequestDto(
     @JsonProperty("content")
     private val _content: String?,
 
-    val email: String
 ) {
     val title: String
         get() = _title!!
