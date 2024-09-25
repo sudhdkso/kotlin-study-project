@@ -35,12 +35,11 @@ class PostService(
 
     fun findByPostId(postId: Long): Post = postRepository.getByPostId(postId)
 
-    //게시글 전체 조회는 최근 작성순 or 조회순 두가지
     fun findAll(pageable: Pageable): List<PostListResponseDto> {
         return postRepository.findByDeletedAtIsNull(pageable).map { it.toListDto() }.toList()
     }
 
-    //업데이트
+
     @Transactional
     fun update(postId: Long, requestDto: PostRequestDto): PostResponseDto {
         val post = findByPostId(postId)
@@ -57,7 +56,6 @@ class PostService(
         return post.toDto()
     }
 
-    //삭제
     @Transactional
     fun deleteByPostId(postId: Long) {
         val post = findByPostId(postId)

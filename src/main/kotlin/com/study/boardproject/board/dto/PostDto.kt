@@ -19,37 +19,40 @@ data class PostRequestDto(
     private val _title: String?,
 
     @field:NotBlank(message = "content is empty")
-    @field:Size(min = 1, max = MAX_CONTENT_LENGTH, message = "The length of the content must be 1 to ${MAX_CONTENT_LENGTH}")
+    @field:Size(
+        min = 1,
+        max = MAX_CONTENT_LENGTH,
+        message = "The length of the content must be 1 to ${MAX_CONTENT_LENGTH}"
+    )
     @JsonProperty("content")
     private val _content: String?,
 
-) {
+    ) {
     val title: String
         get() = _title!!
 
     val content: String
         get() = _content!!
 
-    fun toEntity(user: User, board: Board) : Post {
+    fun toEntity(user: User, board: Board): Post {
         return Post(title, content, user, board)
     }
 }
 
 data class PostListResponseDto(
     val id: Long,
-    val title:String,
+    val title: String,
     val viewCount: Long,
-    val createdAt : LocalDateTime,
+    val createdAt: LocalDateTime,
     val writerName: String
 ) {
-    constructor(post: Post, name:String) : this(
+    constructor(post: Post, name: String) : this(
         post.id ?: -1,
         post.title ?: "Default Title",
         post.viewCount,
         post.createdAt ?: LocalDateTime.now(),
-        name) {
-
-    }
+        name
+    )
 }
 
 data class PostResponseDto(
@@ -61,9 +64,11 @@ data class PostResponseDto(
     val createdAt: LocalDateTime,
     val modifiedAt: LocalDateTime,
     val writerEmail: String,
-    val writerName: String){
+    val writerName: String,
+    val comments: List<CommentResponseDto>
+) {
 
-    constructor(post: Post, email:String, name:String) : this(
+    constructor(post: Post, email: String, name: String) : this(
         post.id ?: -1,
         post.title ?: "Default Title",
         post.content ?: "Default Content",
@@ -72,17 +77,18 @@ data class PostResponseDto(
         post.createdAt ?: LocalDateTime.now(),
         post.modifiedAt ?: LocalDateTime.now(),
         email,
-        name) {
-
-    }
+        name,
+        post.comments.map { it.toDto() }
+    )
 }
 
-fun Post.toDto() : PostResponseDto = PostResponseDto(
+fun Post.toDto(): PostResponseDto = PostResponseDto(
     this,
     email = writer?.email ?: "unknown@example.com",
     name = writer?.name ?: "Unknown Writer"
 )
+
 fun Post.toListDto(): PostListResponseDto = PostListResponseDto(
     this,
-     name = writer?.name ?: "Unknown Writer"
+    name = writer?.name ?: "Unknown Writer"
 )

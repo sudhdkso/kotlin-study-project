@@ -18,7 +18,7 @@ class Comment(content: String, depth: Int, post: Post, writer: User) : BaseEntit
 
     @JoinColumn(name = "postId", referencedColumnName = "id", insertable = true, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    val post: Post? = post
+    var post: Post? = post
 
     @JoinColumn(name = "userId", referencedColumnName = "id", insertable = true, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)

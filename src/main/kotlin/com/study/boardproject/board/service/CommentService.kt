@@ -3,26 +3,35 @@ package com.study.boardproject.board.service
 import com.study.boardproject.board.dto.CommentRequestDto
 import com.study.boardproject.board.dto.CommentResponseDto
 import com.study.boardproject.board.dto.toDto
-import com.study.boardproject.board.entity.Comment
 import com.study.boardproject.board.repository.CommentRepository
 import com.study.boardproject.board.repository.getByCommentId
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
 class CommentService(
     private val commnetRepository: CommentRepository,
     private val postService: PostService,
-    private val userService: UserService
+    private val userService: UserService,
+    private val notificationService: NotificationService
 ) {
 
-    fun save(email: String, requestDto: CommentRequestDto): Comment {
+    @Transactional
+    fun save(email: String, requestDto: CommentRequestDto): CommentResponseDto {
 
-        val board = postService.findByPostId(requestDto.boardId)
+        val post = postService.findByPostId(requestDto.boardId)
         val writer = userService.findUserByEmail(email)
 
         checkRequest(requestDto)
 
-        return commnetRepository.save(requestDto.toEntity(board, writer))
+        val comment = commnetRepository.save(requestDto.toEntity(post, writer))
+        post.addComment(comment)
+
+        if(post.writer != comment.writer){
+            notificationService.sendCommentNotification(post, comment)
+        }
+
+        return comment.toDto()
     }
 
     fun update(commentId: Long, requestDto: CommentRequestDto): CommentResponseDto{
@@ -36,8 +45,14 @@ class CommentService(
         return commnetRepository.save(comment).toDto()
     }
 
+    @Transactional
     fun delete(commentId: Long) {
         val comment = commnetRepository.getByCommentId(commentId)
+
+        comment.post?.let{
+            it.removeComment(comment)
+        } ?: throw IllegalArgumentException("게시글을 찾을 수 없습니다.")
+
         commnetRepository.delete(comment)
     }
 

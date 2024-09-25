@@ -1,5 +1,6 @@
 package com.study.boardproject.board.service
 
+import com.study.boardproject.board.entity.Comment
 import com.study.boardproject.board.entity.Notification
 import com.study.boardproject.board.entity.Post
 import com.study.boardproject.board.repository.EmitterRepository
@@ -24,12 +25,25 @@ class NotificationService(
         val receiver = post.writer ?: throw IllegalArgumentException("사용자를 찾을 수 없습니다.")
         val notification = Notification("link", message, receiver, Notification.NotificationType.EDIT_PERIOD_IMMINENT)
 
-        val notificationId = notificationRepository.save(notification).id ?: throw IllegalArgumentException("알림을 찾을 수 없습니다.")
-        send(receiver.id!!, notificationId, "수정기간이 하루 남았습니다.")
+        val notificationId =
+            notificationRepository.save(notification).id ?: throw IllegalArgumentException("알림을 찾을 수 없습니다.")
+        send(receiver.id!!, notificationId, message)
+    }
+
+    fun sendCommentNotification(post: Post, comment: Comment) {
+        val receiver = post.writer ?: throw IllegalArgumentException("사용자를 찾을 수 없습니다.")
+        val sender = comment.writer ?: "알수없음"
+        val message = " 게시글 [${post.title}]에 ${sender}님이 ${comment.content}라고 댓글을 달았습니다."
+        val notification =
+            Notification("link", message, receiver, Notification.NotificationType.COMMENT_ADDED_NOTIFICATION)
+
+        val notificationId =
+            notificationRepository.save(notification).id ?: throw IllegalArgumentException("알림을 찾을 수 없습니다.")
+        send(receiver.id!!, notificationId, message)
     }
 
     fun subscribe(userId: Long): SseEmitter {
-        val sseEmitter: SseEmitter = SseEmitter(DEFAULT_TIMEOUT)
+        val sseEmitter = SseEmitter(DEFAULT_TIMEOUT)
 
         emitterRepository.save(userId, sseEmitter)
 

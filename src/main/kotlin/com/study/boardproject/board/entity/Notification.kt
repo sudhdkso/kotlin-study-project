@@ -41,7 +41,8 @@ class Notification (link: String, message: String, recevier: User, notificationT
 
     public enum class NotificationType {
         EMPTY,
-        EDIT_PERIOD_IMMINENT
+        EDIT_PERIOD_IMMINENT,
+        COMMENT_ADDED_NOTIFICATION
     }
 
 }

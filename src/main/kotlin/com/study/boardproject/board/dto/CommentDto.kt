@@ -14,8 +14,8 @@ data class CommentRequestDto(
     @field:Size(min = 1, max = Int.MAX_VALUE)
     val content:String,
 
-    @field:Range(min = 0, max = 1)
-    val depth: Int,
+    @field:Range(min = 1, max = 2)
+    val depth: Int = 1,
 
     @field:NotNull
     val boardId:Long,
@@ -42,6 +42,10 @@ data class CommentResponseDto(
     val writerName : String,
     val createdAt :LocalDateTime,
     val modifiedAt : LocalDateTime
+)
+
+data class CommentResponseListDto(
+    val commentResponseDto: List<CommentResponseDto>
 )
 
 fun Comment.toDto() : CommentResponseDto = CommentResponseDto(
