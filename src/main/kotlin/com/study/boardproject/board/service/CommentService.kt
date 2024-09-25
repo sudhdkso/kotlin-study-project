@@ -3,6 +3,7 @@ package com.study.boardproject.board.service
 import com.study.boardproject.board.dto.CommentRequestDto
 import com.study.boardproject.board.dto.CommentResponseDto
 import com.study.boardproject.board.dto.toDto
+import com.study.boardproject.board.entity.Comment
 import com.study.boardproject.board.repository.CommentRepository
 import com.study.boardproject.board.repository.getByCommentId
 import jakarta.transaction.Transactional
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class CommentService(
-    private val commnetRepository: CommentRepository,
+    private val commentRepository: CommentRepository,
     private val postService: PostService,
     private val userService: UserService,
     private val notificationService: NotificationService
@@ -24,7 +25,7 @@ class CommentService(
 
         checkRequest(requestDto)
 
-        val comment = commnetRepository.save(requestDto.toEntity(post, writer))
+        val comment = commentRepository.save(requestDto.toEntity(post, writer))
         post.addComment(comment)
 
         if(post.writer != comment.writer){
@@ -32,6 +33,10 @@ class CommentService(
         }
 
         return comment.toDto()
+    }
+
+    fun findByCommentId(commentId : Long) : Comment {
+        return commentRepository.getByCommentId(commentId)
     }
 
     fun findCommentsByPostId(postId:Long) : List<CommentResponseDto>{
@@ -43,22 +48,22 @@ class CommentService(
 
         checkRequest(requestDto)
 
-        val comment = commnetRepository.getByCommentId(commentId)
+        val comment = commentRepository.getByCommentId(commentId)
         comment.update(requestDto)
-        commnetRepository.save(comment)
+        commentRepository.save(comment)
 
-        return commnetRepository.save(comment).toDto()
+        return commentRepository.save(comment).toDto()
     }
 
     @Transactional
     fun delete(commentId: Long) {
-        val comment = commnetRepository.getByCommentId(commentId)
+        val comment = commentRepository.getByCommentId(commentId)
 
         comment.post?.let{
             it.removeComment(comment)
         } ?: throw IllegalArgumentException("게시글을 찾을 수 없습니다.")
 
-        commnetRepository.delete(comment)
+        commentRepository.delete(comment)
     }
 
     fun checkRequest(requestDto: CommentRequestDto) {

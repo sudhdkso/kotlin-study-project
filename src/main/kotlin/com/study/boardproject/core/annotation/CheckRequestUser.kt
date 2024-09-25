@@ -32,14 +32,20 @@ class RequestUserCheckAspect(
         when (checkRequestUser.entityType) {
             "post" -> {
                 val post = postService.findByPostId(entityIdValue)
-                val writer = post?.writer
-                writer?.let{
-                    if(it.email != currentUserEmail){
-                        throw IllegalArgumentException("게시글 작성자가 아닙니다.")
-                    }
-                } ?: throw IllegalArgumentException("게시글 작성자가 없습니다.")
-            }
+                val writer = post?.writer ?: throw IllegalArgumentException("Unable to find the post author")
 
+                if (writer.email != currentUserEmail) {
+                    throw IllegalArgumentException("You are not the author of this post.")
+                }
+
+            }
+            "comment" -> {
+                val comment = commentService.findByCommentId(entityIdValue)
+                val writer = comment?.writer ?: throw IllegalArgumentException("Unable to find the comment author")
+                if(writer.email != currentUserEmail) {
+                    throw IllegalArgumentException("You are not the author of this comment.")
+                }
+            }
             else -> throw IllegalArgumentException("Unsupported entity type")
         }
     }
