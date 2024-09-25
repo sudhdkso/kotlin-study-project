@@ -20,9 +20,6 @@ data class CommentRequestDto(
     @field:NotNull
     val boardId:Long,
 
-    @field:NotBlank
-    val email:String,
-
 ) {
     fun toEntity(post: Post, user: User) : Comment {
         return Comment(content, depth, post, user)

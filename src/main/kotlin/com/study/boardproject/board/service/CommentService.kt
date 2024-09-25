@@ -15,10 +15,10 @@ class CommentService(
     private val userService: UserService
 ) {
 
-    fun save(requestDto: CommentRequestDto): Comment {
+    fun save(email: String, requestDto: CommentRequestDto): Comment {
 
         val board = postService.findByPostId(requestDto.boardId)
-        val writer = userService.findUserByEmail(requestDto.email)
+        val writer = userService.findUserByEmail(email)
 
         checkRequest(requestDto)
 
