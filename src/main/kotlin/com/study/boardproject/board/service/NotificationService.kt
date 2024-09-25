@@ -32,7 +32,7 @@ class NotificationService(
 
     fun sendCommentNotification(post: Post, comment: Comment) {
         val receiver = post.writer ?: throw IllegalArgumentException("사용자를 찾을 수 없습니다.")
-        val sender = comment.writer ?: "알수없음"
+        val sender = comment.writer?.name ?: "알수없음"
         val message = " 게시글 [${post.title}]에 ${sender}님이 ${comment.content}라고 댓글을 달았습니다."
         val notification =
             Notification("link", message, receiver, Notification.NotificationType.COMMENT_ADDED_NOTIFICATION)
