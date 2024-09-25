@@ -5,16 +5,13 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "comment")
-class Comment(content: String, depth: Int, post: Post, writer: User) : BaseEntity() {
+class Comment(content: String, post: Post, writer: User) : BaseEntity() {
     @Id
     @GeneratedValue
     val id: Long? = null
 
     @Column(nullable = false, length = Int.MAX_VALUE)
     var content: String? = content
-
-    @Column(nullable = false)
-    val depth: Int = depth
 
     @JoinColumn(name = "postId", referencedColumnName = "id", insertable = true, updatable = false)
     @ManyToOne(fetch = FetchType.LAZY)

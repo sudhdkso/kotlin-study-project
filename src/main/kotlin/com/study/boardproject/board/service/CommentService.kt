@@ -34,6 +34,11 @@ class CommentService(
         return comment.toDto()
     }
 
+    fun findCommentsByPostId(postId:Long) : List<CommentResponseDto>{
+        val post = postService.findByPostId(postId)
+        return post.comments.map { it.toDto() }
+    }
+
     fun update(commentId: Long, requestDto: CommentRequestDto): CommentResponseDto{
 
         checkRequest(requestDto)
@@ -59,10 +64,6 @@ class CommentService(
     fun checkRequest(requestDto: CommentRequestDto) {
         require(requestDto.content.isNotBlank()) {
             "댓글의 내용이 비어있습니다."
-        }
-
-        require(requestDto.depth == 0 || requestDto.depth == 1) {
-            "옳지 않은 등록입니다."
         }
     }
 }

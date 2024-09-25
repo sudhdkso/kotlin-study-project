@@ -6,7 +6,6 @@ import com.study.boardproject.board.entity.User
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
-import org.hibernate.validator.constraints.Range
 import java.time.LocalDateTime
 
 data class CommentRequestDto(
@@ -14,15 +13,12 @@ data class CommentRequestDto(
     @field:Size(min = 1, max = Int.MAX_VALUE)
     val content:String,
 
-    @field:Range(min = 1, max = 2)
-    val depth: Int = 1,
-
     @field:NotNull
-    val boardId:Long,
+    val boardId:Long
 
 ) {
     fun toEntity(post: Post, user: User) : Comment {
-        return Comment(content, depth, post, user)
+        return Comment(content, post, user)
     }
 }
 

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/comment")
+@RequestMapping("/api/comments")
 class CommentController(private val commentService: CommentService) {
     //TODO
     // -update
@@ -24,6 +24,12 @@ class CommentController(private val commentService: CommentService) {
     @PutMapping("/{id}")
     fun update(@PathVariable("id")commentId:Long, @RequestBody request: CommentRequestDto) : ResponseEntity<CommentResponseDto> {
         val response = commentService.update(commentId, request)
+        return ResponseEntity.ok().body(response)
+    }
+
+    @GetMapping
+    fun getCommentsByPostId(@RequestParam postId:Long) : ResponseEntity<List<CommentResponseDto>> {
+        val response = commentService.findCommentsByPostId(postId)
         return ResponseEntity.ok().body(response)
     }
 }
