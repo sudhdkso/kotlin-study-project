@@ -1,5 +1,6 @@
 package com.study.boardproject.board.controller
 
+import com.study.boardproject.board.dto.CommentCreateRequestDto
 import com.study.boardproject.board.dto.CommentRequestDto
 import com.study.boardproject.board.dto.CommentResponseDto
 import com.study.boardproject.board.service.CommentService
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 class CommentController(private val commentService: CommentService) {
 
     @PostMapping
-    fun create(@LoginUserEmail email:String, @RequestBody request:CommentRequestDto) : ResponseEntity<CommentResponseDto> {
+    fun create(@LoginUserEmail email:String, @RequestBody request: CommentCreateRequestDto) : ResponseEntity<CommentResponseDto> {
         val response = commentService.save(email, request)
         return ResponseEntity.ok().body(response)
     }

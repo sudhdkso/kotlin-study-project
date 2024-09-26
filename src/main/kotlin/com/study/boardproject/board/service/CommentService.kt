@@ -1,5 +1,6 @@
 package com.study.boardproject.board.service
 
+import com.study.boardproject.board.dto.CommentCreateRequestDto
 import com.study.boardproject.board.dto.CommentRequestDto
 import com.study.boardproject.board.dto.CommentResponseDto
 import com.study.boardproject.board.dto.toDto
@@ -18,17 +19,17 @@ class CommentService(
 ) {
 
     @Transactional
-    fun save(email: String, requestDto: CommentRequestDto): CommentResponseDto {
+    fun save(email: String, requestDto: CommentCreateRequestDto): CommentResponseDto {
 
         val post = postService.findByPostId(requestDto.boardId)
         val writer = userService.findUserByEmail(email)
 
-        checkRequest(requestDto)
+        checkContent(requestDto.content)
 
         val comment = commentRepository.save(requestDto.toEntity(post, writer))
         post.addComment(comment)
 
-        if(post.writer != comment.writer){
+        if(post.writer != writer){
             notificationService.sendCommentNotification(post, comment)
         }
 
@@ -46,12 +47,10 @@ class CommentService(
 
     fun update(commentId: Long, requestDto: CommentRequestDto): CommentResponseDto{
 
-        checkRequest(requestDto)
+        checkContent(requestDto.content)
 
         val comment = commentRepository.getByCommentId(commentId)
-        comment.update(requestDto)
-        commentRepository.save(comment)
-
+        comment.update(requestDto.content)
         return commentRepository.save(comment).toDto()
     }
 
@@ -66,8 +65,8 @@ class CommentService(
         commentRepository.delete(comment)
     }
 
-    fun checkRequest(requestDto: CommentRequestDto) {
-        require(requestDto.content.isNotBlank()) {
+    fun checkContent(content : String) {
+        require(content.isNotBlank()) {
             "댓글의 내용이 비어있습니다."
         }
     }

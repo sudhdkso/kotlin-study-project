@@ -1,11 +1,10 @@
 package com.study.boardproject.board.entity
 
-import com.study.boardproject.board.dto.CommentRequestDto
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "comment")
-class Comment(content: String, post: Post, writer: User) : BaseEntity() {
+class Comment(content: String, post: Post?, writer: User) : BaseEntity() {
     @Id
     @GeneratedValue
     val id: Long? = null
@@ -21,7 +20,7 @@ class Comment(content: String, post: Post, writer: User) : BaseEntity() {
     @ManyToOne(fetch = FetchType.LAZY)
     val writer: User? = writer
 
-    fun update(requestDto: CommentRequestDto) {
-        content = requestDto.content
+    fun update(content: String) {
+        this.content = content
     }
 }

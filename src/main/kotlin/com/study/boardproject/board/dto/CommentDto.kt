@@ -8,29 +8,25 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import java.time.LocalDateTime
 
-data class CommentRequestDto(
+data class CommentCreateRequestDto(
     @field:NotBlank
     @field:Size(min = 1, max = Int.MAX_VALUE)
     val content:String,
 
     @field:NotNull
     val boardId:Long
-
 ) {
     fun toEntity(post: Post, user: User) : Comment {
         return Comment(content, post, user)
     }
 }
 
-data class CommentUpdateRequestDto(
-    @field:NotBlank
-    val commentId:Long,
-
+data class CommentRequestDto(
     @field:NotBlank
     @field:Size(min = 1, max = Int.MAX_VALUE)
     val content:String,
 
-    ) {
+) {
 }
 
 data class CommentResponseDto(
