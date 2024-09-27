@@ -3,7 +3,7 @@ package com.study.boardproject.board.controller
 import com.study.boardproject.board.dto.BoardCreateRequestDto
 import com.study.boardproject.board.dto.BoardResponseDto
 import com.study.boardproject.board.dto.BoardUpdateRequestDto
-import com.study.boardproject.board.dto.PostResponseDto
+import com.study.boardproject.post.dto.PostResponseDto
 import com.study.boardproject.board.service.BoardService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

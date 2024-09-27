@@ -1,8 +1,8 @@
 package com.study.boardproject.board.service
 
-import com.study.boardproject.board.createBoard
-import com.study.boardproject.board.createBoardRequest
-import com.study.boardproject.board.createBoardUpdateRequest
+import com.study.boardproject.createBoard
+import com.study.boardproject.createBoardRequest
+import com.study.boardproject.createBoardUpdateRequest
 import com.study.boardproject.board.repository.BoardRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec

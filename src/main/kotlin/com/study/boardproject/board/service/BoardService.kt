@@ -4,6 +4,8 @@ import com.study.boardproject.board.dto.*
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.repository.BoardRepository
 import com.study.boardproject.board.repository.getByBoardId
+import com.study.boardproject.post.dto.PostResponseDto
+import com.study.boardproject.post.dto.toDto
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 

@@ -121,6 +121,6 @@ sonarqube {
 		property("sonar.organization", "qwewww01234543210")
 		property("sonar.host.url", "https://sonarcloud.io")
 		property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
-		property("sonar.inclusions","src/main/kotlin/com/study/boardproject/board/entity/**, src/main/kotlin/com/study/boardproject/board/service/**")
+		property("sonar.inclusions","src/main/kotlin/com/study/boardproject/**/entity/**, src/main/kotlin/com/study/boardproject/**/service/**")
 	}
 }

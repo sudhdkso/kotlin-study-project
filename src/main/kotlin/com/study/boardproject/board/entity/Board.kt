@@ -1,6 +1,8 @@
 package com.study.boardproject.board.entity
 
 import com.study.boardproject.board.dto.BoardUpdateRequestDto
+import com.study.boardproject.common.base.BaseTime
+import com.study.boardproject.post.entity.Post
 import jakarta.persistence.*
 
 @Entity
@@ -10,7 +12,7 @@ class Board(
     var description: String,
     var minReadLevel: Int = 0,
     var minWriteLevel: Int = 0
-) : BaseEntity() {
+) : BaseTime() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
