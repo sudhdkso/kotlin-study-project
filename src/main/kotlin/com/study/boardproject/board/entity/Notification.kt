@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-class Notification (link: String, message: String, recevier: User, notificationType: NotificationType){
+class Notification (link: String, message: String, receiver: User, notificationType: NotificationType){
     //NotificationType - 알림 타입 (댓글 알림, 게시글 수정 remind알림)
     @Id
     @GeneratedValue
@@ -27,10 +27,10 @@ class Notification (link: String, message: String, recevier: User, notificationT
     var checked: Boolean = false //확인했는가?
 
     @ManyToOne(fetch = FetchType.LAZY)
-    val recevier: User = recevier
+    val receiver: User = receiver
 
     @Enumerated(EnumType.STRING)
-    val notificationType : NotificationType = notificationType
+    val type : NotificationType = notificationType
 
     @CreationTimestamp
     val createdAt: LocalDateTime = LocalDateTime.now()
@@ -41,7 +41,8 @@ class Notification (link: String, message: String, recevier: User, notificationT
 
     public enum class NotificationType {
         EMPTY,
-        EDIT_PERIOD_IMMINENT
+        EDIT_PERIOD_IMMINENT,
+        COMMENT_ADDED_NOTIFICATION
     }
 
 }
