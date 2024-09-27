@@ -1,4 +1,4 @@
-package com.study.boardproject.board
+package com.study.boardproject
 
 import com.study.boardproject.post.dto.PostRequestDto
 import com.study.boardproject.board.entity.Board

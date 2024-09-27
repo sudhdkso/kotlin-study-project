@@ -1,4 +1,4 @@
-package com.study.boardproject.board.entity
+package com.study.boardproject.user.entity
 
 import com.study.boardproject.board.user.entity.enums.Role
 import com.study.boardproject.board.user.entity.User

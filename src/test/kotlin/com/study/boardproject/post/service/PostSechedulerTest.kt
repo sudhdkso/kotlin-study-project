@@ -1,9 +1,7 @@
-package com.study.boardproject.board.service
+package com.study.boardproject.post.service
 
-import com.study.boardproject.board.createPost
+import com.study.boardproject.createPost
 import com.study.boardproject.notification.service.NotificationService
-import com.study.boardproject.post.service.PostScheduler
-import com.study.boardproject.post.service.PostService
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import io.mockk.mockk

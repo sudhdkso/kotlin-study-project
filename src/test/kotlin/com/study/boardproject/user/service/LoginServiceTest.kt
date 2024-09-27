@@ -1,6 +1,6 @@
-package com.study.boardproject.board.service
+package com.study.boardproject.user.service
 
-import com.study.boardproject.board.createUser
+import com.study.boardproject.createUser
 import com.study.boardproject.board.user.dto.LoginRequestDto
 import com.study.boardproject.board.user.repository.UserRepository
 import com.study.boardproject.board.user.repository.getByEmail

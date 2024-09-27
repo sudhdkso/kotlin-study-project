@@ -1,7 +1,7 @@
-package com.study.boardproject.board.service
+package com.study.boardproject.user.service
 
-import com.study.boardproject.board.createUser
-import com.study.boardproject.board.createUserRequest
+import com.study.boardproject.createUser
+import com.study.boardproject.createUserRequest
 import com.study.boardproject.board.user.repository.UserRepository
 import com.study.boardproject.board.user.service.UserService
 import io.kotest.assertions.throwables.shouldThrow

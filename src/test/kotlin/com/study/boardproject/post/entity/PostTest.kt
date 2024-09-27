@@ -1,7 +1,7 @@
-package com.study.boardproject.board.entity
+package com.study.boardproject.post.entity
 
-import com.study.boardproject.board.createPost
-import com.study.boardproject.post.entity.Post
+import com.study.boardproject.createPost
+import com.study.boardproject.board.entity.Board
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.longs.shouldBeExactly
 import io.kotest.matchers.shouldBe

@@ -1,4 +1,4 @@
-package com.study.boardproject.board
+package com.study.boardproject
 
 import com.study.boardproject.board.user.dto.UserRequestDto
 import com.study.boardproject.board.user.entity.User

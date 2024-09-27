@@ -1,6 +1,6 @@
-package com.study.boardproject.board.entity
+package com.study.boardproject.user.entity
 
-import com.study.boardproject.board.createUser
+import com.study.boardproject.createUser
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 

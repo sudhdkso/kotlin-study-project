@@ -1,8 +1,8 @@
 package com.study.boardproject.board.entity
 
-import com.study.boardproject.board.createBoard
-import com.study.boardproject.board.createBoardUpdateRequest
-import com.study.boardproject.board.createPost
+import com.study.boardproject.createBoard
+import com.study.boardproject.createBoardUpdateRequest
+import com.study.boardproject.createPost
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
 import io.kotest.data.row

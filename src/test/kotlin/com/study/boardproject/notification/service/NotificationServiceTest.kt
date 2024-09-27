@@ -1,13 +1,12 @@
-package com.study.boardproject.board.service
+package com.study.boardproject.notification.service
 
-import com.study.boardproject.board.createComment
-import com.study.boardproject.board.createPost
-import com.study.boardproject.board.createUser
+import com.study.boardproject.createComment
+import com.study.boardproject.createPost
+import com.study.boardproject.createUser
 import com.study.boardproject.notification.entity.Notification
 import com.study.boardproject.board.user.entity.User
 import com.study.boardproject.notification.repository.EmitterRepository
 import com.study.boardproject.notification.repository.NotificationRepository
-import com.study.boardproject.notification.service.NotificationService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe

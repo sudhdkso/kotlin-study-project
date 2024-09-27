@@ -1,4 +1,4 @@
-package com.study.boardproject.board
+package com.study.boardproject
 
 import com.study.boardproject.comment.dto.CommentCreateRequestDto
 import com.study.boardproject.comment.dto.CommentRequestDto

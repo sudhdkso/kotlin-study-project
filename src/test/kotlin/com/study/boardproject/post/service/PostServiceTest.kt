@@ -1,15 +1,15 @@
-package com.study.boardproject.board.service
+package com.study.boardproject.post.service
 
-import com.study.boardproject.board.board
-import com.study.boardproject.board.createPost
-import com.study.boardproject.board.createPostRequest
-import com.study.boardproject.board.createUser
+import com.study.boardproject.board
+import com.study.boardproject.createPost
+import com.study.boardproject.createPostRequest
+import com.study.boardproject.createUser
+import com.study.boardproject.board.service.BoardService
 import com.study.boardproject.board.user.service.UserService
 import com.study.boardproject.notification.service.NotificationService
 import com.study.boardproject.post.entity.Post
 import com.study.boardproject.post.repository.PostRepository
 import com.study.boardproject.post.repository.getByPostId
-import com.study.boardproject.post.service.PostService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -35,7 +35,7 @@ class PostServiceTest : BehaviorSpec({
         val email = "test@example.com"
         every { userService.findUserByEmail(any()) } returns createUser()
         every { boardService.findByBoardId(any()) } returns board
-        every { board.addPost(any()) } just runs
+        every { com.study.boardproject.board.addPost(any()) } just runs
 
         every { postRepository.save(any()) } returns createPost(title = title)
         When("저장하면") {

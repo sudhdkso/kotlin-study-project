@@ -1,4 +1,4 @@
-package com.study.boardproject.board
+package com.study.boardproject
 
 import com.study.boardproject.board.dto.BoardCreateRequestDto
 import com.study.boardproject.board.dto.BoardUpdateRequestDto
