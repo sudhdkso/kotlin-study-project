@@ -14,7 +14,7 @@ annotation class LoginUserEmail
 @Aspect
 @Component
 class LoginUserEmailAspect {
-    @Around("execution(* com.study.boardproject.board.controller..*(.., @LoginUserEmail (*), ..))")
+    @Around("execution(* com.study.boardproject..controller..*(.., @LoginUserEmail (*), ..))")
     fun injectLoginUserEmail(joinPoint: ProceedingJoinPoint): Any? {
         val authentication = SecurityContextHolder.getContext().authentication
         val email = authentication?.name ?: throw IllegalArgumentException("Unauthorized access")

@@ -4,9 +4,12 @@ import com.study.boardproject.board.board
 import com.study.boardproject.board.createPost
 import com.study.boardproject.board.createPostRequest
 import com.study.boardproject.board.createUser
-import com.study.boardproject.board.entity.Post
-import com.study.boardproject.board.repository.PostRepository
-import com.study.boardproject.board.repository.getByPostId
+import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.notification.service.NotificationService
+import com.study.boardproject.post.entity.Post
+import com.study.boardproject.post.repository.PostRepository
+import com.study.boardproject.post.repository.getByPostId
+import com.study.boardproject.post.service.PostService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe

@@ -3,10 +3,11 @@ package com.study.boardproject.board.service
 import com.study.boardproject.board.createComment
 import com.study.boardproject.board.createPost
 import com.study.boardproject.board.createUser
-import com.study.boardproject.board.entity.Notification
-import com.study.boardproject.board.entity.User
-import com.study.boardproject.board.repository.EmitterRepository
-import com.study.boardproject.board.repository.NotificationRepository
+import com.study.boardproject.notification.entity.Notification
+import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.notification.repository.EmitterRepository
+import com.study.boardproject.notification.repository.NotificationRepository
+import com.study.boardproject.notification.service.NotificationService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe

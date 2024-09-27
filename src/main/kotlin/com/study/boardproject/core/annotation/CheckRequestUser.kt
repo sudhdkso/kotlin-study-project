@@ -1,7 +1,7 @@
 package com.study.boardproject.core.annotation
 
-import com.study.boardproject.board.service.CommentService
-import com.study.boardproject.board.service.PostService
+import com.study.boardproject.comment.service.CommentService
+import com.study.boardproject.post.service.PostService
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before

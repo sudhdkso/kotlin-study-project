@@ -2,8 +2,12 @@ package com.study.boardproject.board.service
 
 
 import com.study.boardproject.board.*
-import com.study.boardproject.board.repository.CommentRepository
-import com.study.boardproject.board.repository.getByCommentId
+import com.study.boardproject.comment.repository.CommentRepository
+import com.study.boardproject.comment.repository.getByCommentId
+import com.study.boardproject.comment.service.CommentService
+import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.notification.service.NotificationService
+import com.study.boardproject.post.service.PostService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe

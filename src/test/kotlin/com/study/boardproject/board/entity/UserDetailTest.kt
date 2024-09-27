@@ -1,6 +1,7 @@
 package com.study.boardproject.board.entity
 
-import com.study.boardproject.board.entity.enums.Role
+import com.study.boardproject.board.user.entity.enums.Role
+import com.study.boardproject.board.user.entity.User
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import org.springframework.security.core.authority.SimpleGrantedAuthority

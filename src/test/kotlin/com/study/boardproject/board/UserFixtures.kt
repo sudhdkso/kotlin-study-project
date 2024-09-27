@@ -1,7 +1,7 @@
 package com.study.boardproject.board
 
-import com.study.boardproject.board.dto.UserRequestDto
-import com.study.boardproject.board.entity.User
+import com.study.boardproject.board.user.dto.UserRequestDto
+import com.study.boardproject.board.user.entity.User
 
 const val NAME: String = "test"
 const val EMAIL: String = "test1234@email.com"

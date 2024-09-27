@@ -1,10 +1,12 @@
 package com.study.boardproject.board.service
 
 import com.study.boardproject.board.createUser
-import com.study.boardproject.board.dto.LoginRequestDto
-import com.study.boardproject.board.repository.UserRepository
-import com.study.boardproject.board.repository.getByEmail
-import com.study.boardproject.jwt.TokenProvider
+import com.study.boardproject.board.user.dto.LoginRequestDto
+import com.study.boardproject.board.user.repository.UserRepository
+import com.study.boardproject.board.user.repository.getByEmail
+import com.study.boardproject.board.user.service.LoginService
+import com.study.boardproject.board.user.service.UserDetailService
+import com.study.boardproject.core.security.TokenProvider
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -21,7 +23,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 @ExtendWith(SpringExtension::class)
 @SpringBootTest
 class LoginServiceTest : BehaviorSpec({
-    val userRepository:UserRepository = mockk()
+    val userRepository: UserRepository = mockk()
     val encoder : PasswordEncoder = BCryptPasswordEncoder()
     val authenticationManager: AuthenticationManager = mockk()
     val userDetailService: UserDetailService = mockk()
