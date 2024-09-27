@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit
 
 @Entity
 @Table(name = "post")
-class Post(title: String, content: String, writer: User, board:Board) : BaseEntity() {
+class Post(title: String, content: String, writer: User?, board:Board) : BaseEntity() {
     @Id
     @GeneratedValue
     val id: Long? = null
