@@ -1,5 +1,7 @@
 package com.study.boardproject.comment.service
 
+import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.board.user.service.UserService
 import com.study.boardproject.comment.dto.CommentCreateRequestDto
 import com.study.boardproject.comment.dto.CommentRequestDto
 import com.study.boardproject.comment.dto.CommentResponseDto
@@ -7,7 +9,6 @@ import com.study.boardproject.comment.dto.toDto
 import com.study.boardproject.comment.entity.Comment
 import com.study.boardproject.comment.repository.CommentRepository
 import com.study.boardproject.comment.repository.getByCommentId
-import com.study.boardproject.board.user.service.UserService
 import com.study.boardproject.notification.service.NotificationService
 import com.study.boardproject.post.service.PostService
 import jakarta.transaction.Transactional
@@ -22,10 +23,9 @@ class CommentService(
 ) {
 
     @Transactional
-    fun save(email: String, requestDto: CommentCreateRequestDto): CommentResponseDto {
+    fun save(writer: User, requestDto: CommentCreateRequestDto): CommentResponseDto {
 
         val post = postService.findByPostId(requestDto.boardId)
-        val writer = userService.findUserByEmail(email)
 
         checkContent(requestDto.content)
 

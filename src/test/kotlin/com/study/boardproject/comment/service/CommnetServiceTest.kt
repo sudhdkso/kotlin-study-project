@@ -2,9 +2,9 @@ package com.study.boardproject.comment.service
 
 
 import com.study.boardproject.*
+import com.study.boardproject.board.user.service.UserService
 import com.study.boardproject.comment.repository.CommentRepository
 import com.study.boardproject.comment.repository.getByCommentId
-import com.study.boardproject.board.user.service.UserService
 import com.study.boardproject.notification.service.NotificationService
 import com.study.boardproject.post.service.PostService
 import io.kotest.assertions.throwables.shouldThrow
@@ -24,8 +24,7 @@ class CommnetServiceTest : BehaviorSpec({
     val postService: PostService = mockk()
     val userService: UserService = mockk()
     val notificationService: NotificationService = mockk()
-    val commentService: CommentService =
-        CommentService(commentRepository, postService, userService, notificationService)
+    val commentService = CommentService(commentRepository, postService, userService, notificationService)
 
     Given("댓글 생성을 유효한 값으로 요청할 때") {
         val content = "댓글1"
@@ -36,13 +35,12 @@ class CommnetServiceTest : BehaviorSpec({
         val comment = createComment(content = content)
 
         every { commentRepository.save(any()) } returns comment
-        every { userService.findUserByEmail(any()) } returns user
         every { postService.findByPostId(any()) } returns post
 
         every { notificationService.sendCommentNotification(any(), any()) } just runs
 
         When("저장하면") {
-            val actual = commentService.save(email, request)
+            val actual = commentService.save(user, request)
             Then("성공한다.") {
                 actual.content shouldBe content
             }
@@ -57,14 +55,14 @@ class CommnetServiceTest : BehaviorSpec({
         val request = createCommentCreateRequest(content = content)
         val email = "test@example.com"
         val post = createPost()
+        val user = createUser(email = email)
 
-        every { userService.findUserByEmail(any()) } returns createUser(email = email)
         every { postService.findByPostId(any()) } returns post
 
         When("저장하면") {
             Then("IllegalArgumentException가 발생한다.") {
                 shouldThrow<IllegalArgumentException> {
-                    commentService.save(email, request)
+                    commentService.save(user, request)
                 }.message shouldBe "댓글의 내용이 비어있습니다."
             }
 
