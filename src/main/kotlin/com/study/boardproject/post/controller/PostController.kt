@@ -1,12 +1,11 @@
 package com.study.boardproject.post.controller
 
+import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.core.annotation.CheckRequestUser
 import com.study.boardproject.post.dto.PostListResponseDto
 import com.study.boardproject.post.dto.PostRequestDto
 import com.study.boardproject.post.dto.PostResponseDto
-import com.study.boardproject.post.dto.toDto
 import com.study.boardproject.post.service.PostService
-import com.study.boardproject.core.annotation.CheckRequestUser
-import com.study.boardproject.core.annotation.LoginUserEmail
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -17,24 +16,28 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
-@RequestMapping("/api/post")
+@RequestMapping("/api/posts")
 @RestController
 @Validated
 class PostController(private val postService: PostService) {
-    @PostMapping
-    fun create(@LoginUserEmail email: String, @RequestBody @Valid requestDto: PostRequestDto) : ResponseEntity<PostResponseDto>{
 
-        val postResponse = postService.save(email, requestDto)
+    @PostMapping
+    fun create(@AuthenticationPrincipal user:User, @RequestBody @Valid requestDto: PostRequestDto) : ResponseEntity<PostResponseDto>{
+        val postResponse = postService.save(user, requestDto)
         return ResponseEntity.ok().body(postResponse)
     }
 
     @GetMapping("/{id}")
-    fun getOne(@PathVariable("id")postdId: Long, req: HttpServletRequest, res: HttpServletResponse): ResponseEntity<PostResponseDto> {
-        viewCountUp(postdId, req, res)
-        val postResponse = postService.findByPostId(postdId).toDto()
+    fun getOne(
+        @AuthenticationPrincipal user: User,
+        @PathVariable("id")postId: Long, req: HttpServletRequest, res: HttpServletResponse): ResponseEntity<PostResponseDto> {
+
+        val postResponse = postService.getByPostId(user, postId)
+        viewCountUp(postId, req, res)
         return ResponseEntity.ok().body(postResponse)
     }
 
