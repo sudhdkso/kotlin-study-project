@@ -5,13 +5,13 @@ import com.study.boardproject.board.user.repository.UserRepository
 import com.study.boardproject.board.user.service.UserService
 import com.study.boardproject.createUser
 import com.study.boardproject.createUserRequest
+import com.study.boardproject.createUserUpdateRequest
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
-import io.mockk.verify
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -34,6 +34,18 @@ class UserServiceTest : BehaviorSpec({
             val result = userService.save(request)
             Then("잘 통과한다.") {
                 request.name shouldBe result.name
+            }
+        }
+    }
+
+    Given("이름, 전화번호, 비밀번호 중 유효한 값을 가지고") {
+        val name = "Change Name"
+        val request = createUserUpdateRequest(name = name)
+        val user = createUser()
+        When("사용자 정보 변경 시") {
+            userService.update(user, request)
+            Then("성공한다.") {
+                user.name shouldBe name
             }
         }
     }
@@ -79,17 +91,31 @@ class UserServiceTest : BehaviorSpec({
         }
     }
 
+    Given("올바르지 않는 비밀번호 형식으로") {
+        val invaildPassword = "1234"
+        val request = createUserRequest(password = invaildPassword)
+        every { userService.isEmailDuplicate(request.email) } returns false
+
+
+        When("사용자 회원가입 시") {
+            Then("에러가 발생한다.") {
+                shouldThrow<IllegalArgumentException> {
+                    userService.save(request)
+                }.message shouldBe "올바른 비밀번호 형식이 아닙니다."
+            }
+        }
+    }
+
     Given("매니저 레벨의 사용자가") {
         val manager = createUser(level = Level.MANAGER)
         val targetUserEmail = "target@example.com"
         val expectedLevel = Level.LEVEL_2.value
         val targetUser = createUser(email = targetUserEmail, level = Level.LEVEL_1)
         every { userService.findUserByEmail(any()) } returns targetUser
-        every { userRepository.save(any()) } returns targetUser
         When("다른 사용자의 레벨을 변경하려고 하면") {
             userService.updateUserLevel(manager, targetUserEmail, expectedLevel)
             Then("성공한다.") {
-                verify(exactly = 1) { userRepository.save(targetUser) }
+                targetUser.level.value shouldBe expectedLevel
             }
         }
     }
