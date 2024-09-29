@@ -5,6 +5,6 @@ import jakarta.validation.constraints.Size
 
 data class CommentRequestDto(
     @field:NotBlank
-    @field:Size(min = 1, max = Int.MAX_VALUE)
+    @field:Size(min = 1, max = 1000)
     val content: String
 )

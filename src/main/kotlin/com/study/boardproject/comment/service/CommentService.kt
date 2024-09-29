@@ -72,5 +72,8 @@ class CommentService(
         require(content.isNotBlank()) {
             "댓글의 내용이 비어있습니다."
         }
+        require(content.length in 1..1000){
+            "댓글은 1000자 이하로 작성해주세요."
+        }
     }
 }

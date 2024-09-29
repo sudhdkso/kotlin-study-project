@@ -69,6 +69,25 @@ class CommnetServiceTest : BehaviorSpec({
         }
     }
 
+    Given("댓글 내용이 1000자 이상으로 주어질 때") {
+        val content = "a".repeat(2000)
+        val request = createCommentCreateRequest(content = content)
+        val email = "test@example.com"
+        val post = createPost()
+        val user = createUser(email = email)
+
+        every { postService.findByPostId(any()) } returns post
+
+        When("저장하면") {
+            Then("IllegalArgumentException가 발생한다.") {
+                shouldThrow<IllegalArgumentException> {
+                    commentService.save(user, request)
+                }.message shouldBe "댓글은 1000자 이하로 작성해주세요."
+            }
+
+        }
+    }
+
     Given("댓글 변경을 유효한값으로 요청할 때") {
         val commentId = 1L
         val email = "test@example.com"
