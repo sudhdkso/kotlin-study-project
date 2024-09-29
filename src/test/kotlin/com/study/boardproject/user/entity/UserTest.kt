@@ -1,6 +1,6 @@
 package com.study.boardproject.user.entity
 
-import com.study.boardproject.board.user.entity.enums.Level
+import com.study.boardproject.user.entity.enums.Level
 import com.study.boardproject.createUser
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec

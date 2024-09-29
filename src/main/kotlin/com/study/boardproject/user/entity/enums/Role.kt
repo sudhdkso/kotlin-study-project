@@ -1,4 +1,4 @@
-package com.study.boardproject.board.user.entity.enums
+package com.study.boardproject.user.entity.enums
 
 enum class Role(val type:String) {
     ADMIN("ROLE_ADMIN"),

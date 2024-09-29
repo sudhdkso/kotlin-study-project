@@ -1,6 +1,6 @@
 package com.study.boardproject.post.controller
 
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 import com.study.boardproject.core.annotation.CheckRequestUser
 import com.study.boardproject.post.dto.PostListResponseDto
 import com.study.boardproject.post.dto.PostRequestDto
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*
 class PostController(private val postService: PostService) {
 
     @PostMapping
-    fun create(@AuthenticationPrincipal user:User, @RequestBody @Valid requestDto: PostRequestDto) : ResponseEntity<PostResponseDto>{
+    fun create(@AuthenticationPrincipal user: User, @RequestBody @Valid requestDto: PostRequestDto) : ResponseEntity<PostResponseDto>{
         val postResponse = postService.save(user, requestDto)
         return ResponseEntity.ok().body(postResponse)
     }

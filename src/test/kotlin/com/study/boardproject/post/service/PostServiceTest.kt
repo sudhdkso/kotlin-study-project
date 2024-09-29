@@ -2,7 +2,7 @@ package com.study.boardproject.post.service
 
 import com.study.boardproject.*
 import com.study.boardproject.board.service.BoardService
-import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.user.service.UserService
 import com.study.boardproject.notification.service.NotificationService
 import com.study.boardproject.post.entity.Post
 import com.study.boardproject.post.repository.PostRepository

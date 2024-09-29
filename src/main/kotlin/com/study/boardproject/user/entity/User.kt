@@ -1,8 +1,8 @@
-package com.study.boardproject.board.user.entity
+package com.study.boardproject.user.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.study.boardproject.board.user.entity.enums.Level
-import com.study.boardproject.board.user.entity.enums.Role
+import com.study.boardproject.user.entity.enums.Level
+import com.study.boardproject.user.entity.enums.Role
 import com.study.boardproject.post.entity.Post
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
-class User(email: String, name: String, password: String, phoneNumber: String? = null, role: Role = Role.USER, level:Level = Level.LEVEL_1) :
+class User(email: String, name: String, password: String, phoneNumber: String? = null, role: Role = Role.USER, level: Level = Level.LEVEL_1) :
     UserDetails {
     @Id
     @GeneratedValue

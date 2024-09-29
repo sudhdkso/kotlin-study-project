@@ -1,6 +1,6 @@
 package com.study.boardproject.comment.controller
 
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 import com.study.boardproject.comment.dto.CommentCreateRequestDto
 import com.study.boardproject.comment.dto.CommentRequestDto
 import com.study.boardproject.comment.dto.CommentResponseDto

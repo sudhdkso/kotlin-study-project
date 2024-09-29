@@ -1,7 +1,7 @@
 package com.study.boardproject.comment.entity
 
 import com.study.boardproject.common.base.BaseTime
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 import com.study.boardproject.post.entity.Post
 import jakarta.persistence.*
 

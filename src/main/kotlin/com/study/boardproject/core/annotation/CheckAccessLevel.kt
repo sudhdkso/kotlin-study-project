@@ -1,7 +1,7 @@
 package com.study.boardproject.core.annotation
 
-import com.study.boardproject.board.user.entity.enums.Level
-import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.user.entity.enums.Level
+import com.study.boardproject.user.service.UserService
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect

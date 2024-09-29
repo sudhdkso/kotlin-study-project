@@ -1,4 +1,4 @@
-package com.study.boardproject.board.user.entity.enums
+package com.study.boardproject.user.entity.enums
 
 enum class Level(val value:Int) {
     EMPTY(-1),
@@ -9,7 +9,7 @@ enum class Level(val value:Int) {
     MANAGER(5);
 
     companion object {
-        fun fromLevel(level: Int) : Level{
+        fun fromLevel(level: Int) : Level {
             return values()
                 .find { it.value == level }
                 ?: EMPTY

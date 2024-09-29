@@ -1,11 +1,11 @@
 package com.study.boardproject.user.service
 
 import com.study.boardproject.createUser
-import com.study.boardproject.board.user.dto.LoginRequestDto
-import com.study.boardproject.board.user.repository.UserRepository
-import com.study.boardproject.board.user.repository.getByEmail
-import com.study.boardproject.board.user.service.LoginService
-import com.study.boardproject.board.user.service.UserDetailService
+import com.study.boardproject.user.dto.LoginRequestDto
+import com.study.boardproject.user.repository.UserRepository
+import com.study.boardproject.user.repository.getByEmail
+import com.study.boardproject.user.service.LoginService
+import com.study.boardproject.user.service.UserDetailService
 import com.study.boardproject.core.security.TokenProvider
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec

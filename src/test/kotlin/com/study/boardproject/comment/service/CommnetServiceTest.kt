@@ -2,7 +2,7 @@ package com.study.boardproject.comment.service
 
 
 import com.study.boardproject.*
-import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.user.service.UserService
 import com.study.boardproject.comment.repository.CommentRepository
 import com.study.boardproject.comment.repository.getByCommentId
 import com.study.boardproject.notification.service.NotificationService

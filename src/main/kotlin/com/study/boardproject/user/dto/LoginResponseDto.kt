@@ -1,4 +1,4 @@
-package com.study.boardproject.board.user.dto
+package com.study.boardproject.user.dto
 
 data class LoginResponseDto(
     val email:String,

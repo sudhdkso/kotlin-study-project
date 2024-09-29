@@ -2,7 +2,7 @@ package com.study.boardproject.post.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.study.boardproject.board.entity.Board
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 import com.study.boardproject.post.entity.Post
 import com.study.boardproject.common.constants.BoardConstants
 import jakarta.validation.constraints.NotBlank

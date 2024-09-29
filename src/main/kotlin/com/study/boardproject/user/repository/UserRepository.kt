@@ -1,6 +1,6 @@
-package com.study.boardproject.board.user.repository
+package com.study.boardproject.user.repository
 
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
 
 fun UserRepository.getByEmail(email: String) : User {
