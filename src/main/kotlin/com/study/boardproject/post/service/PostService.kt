@@ -2,15 +2,16 @@ package com.study.boardproject.post.service
 
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.service.BoardService
-import com.study.boardproject.notification.service.NotificationService
+import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.board.user.entity.enums.Level
 import com.study.boardproject.board.user.service.UserService
-import com.study.boardproject.core.annotation.LoginUserEmail
+import com.study.boardproject.common.constants.BoardConstants.MAX_CONTENT_LENGTH
+import com.study.boardproject.common.constants.BoardConstants.MAX_TITLE_LENGTH
+import com.study.boardproject.notification.service.NotificationService
 import com.study.boardproject.post.dto.*
 import com.study.boardproject.post.entity.Post
 import com.study.boardproject.post.repository.PostRepository
 import com.study.boardproject.post.repository.getByPostId
-import com.study.boardproject.common.constants.BoardConstants.MAX_CONTENT_LENGTH
-import com.study.boardproject.common.constants.BoardConstants.MAX_TITLE_LENGTH
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -25,11 +26,14 @@ class PostService(
 ) {
 
     @Transactional
-    fun save(@LoginUserEmail email: String, requestDto: PostRequestDto): PostResponseDto {
-        val user = userService.findUserByEmail(email)
+    fun save(user:User, requestDto: PostRequestDto): PostResponseDto {
         val board = boardService.findByBoardId(requestDto.boardId)
 
+        val accessLevel = board?.minWriteLevel ?: Level.EMPTY.value
+        checkAccessLevel(user.level.value, accessLevel)
+
         validateRequest(requestDto)
+
         val post = postRepository.save(requestDto.toEntity(user, board))
 
         board.addPost(post)
@@ -42,6 +46,14 @@ class PostService(
         return postRepository.findByDeletedAtIsNull(pageable).map { it.toListDto() }.toList()
     }
 
+    fun getByPostId(user: User, postId: Long) : PostResponseDto{
+        val post = findByPostId(postId)
+
+        val accessLevel = post.board?.minReadLevel ?: Level.EMPTY.value
+        checkAccessLevel(user.level.value, accessLevel)
+
+        return post.toDto()
+    }
 
     @Transactional
     fun update(postId: Long, requestDto: PostRequestDto): PostResponseDto {
@@ -87,6 +99,12 @@ class PostService(
     fun sendEditDeadlineNotifications() {
         val boards = findBoardWithEditDedlineSoon()
         boards.forEach { board -> notificationService.sendEditDeadlineNotification(board) }
+    }
+
+    private fun checkAccessLevel(userLevel: Int, accessLevel: Int){
+        if(userLevel < accessLevel){
+            throw IllegalAccessException("접근 권한이 없습니다.")
+        }
     }
 
     private fun checkEditablePost(post: Post) {

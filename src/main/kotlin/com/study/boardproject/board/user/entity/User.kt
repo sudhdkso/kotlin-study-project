@@ -1,6 +1,7 @@
 package com.study.boardproject.board.user.entity
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.study.boardproject.board.user.entity.enums.Level
 import com.study.boardproject.board.user.entity.enums.Role
 import com.study.boardproject.post.entity.Post
 import jakarta.persistence.*
@@ -9,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 @Entity
-class User(email: String, name: String, password: String, phoneNumber: String? = null, role: Role = Role.USER) :
+class User(email: String, name: String, password: String, phoneNumber: String? = null, role: Role = Role.USER, level:Level = Level.LEVEL_1) :
     UserDetails {
     @Id
     @GeneratedValue
@@ -28,6 +29,9 @@ class User(email: String, name: String, password: String, phoneNumber: String? =
     @Enumerated(EnumType.STRING)
     var role : Role = role
 
+    @Enumerated(EnumType.STRING)
+    var level: Level = level
+
     @Column(nullable = false)
     var phoneNumber = phoneNumber
         protected set
@@ -41,6 +45,13 @@ class User(email: String, name: String, password: String, phoneNumber: String? =
         this.name = name ?: this.name
         this.password = password ?: this.password
         this.phoneNumber = phoneNumber ?: this.phoneNumber
+    }
+
+    fun changeLevel(newLevel: Level) {
+        if (this.level == Level.MANAGER) {
+            throw IllegalArgumentException("매니저는 등급을 변경할 수 없습니다.")
+        }
+        this.level = newLevel
     }
 
     override fun getAuthorities(): MutableCollection<GrantedAuthority>? {

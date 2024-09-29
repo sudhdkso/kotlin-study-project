@@ -8,8 +8,8 @@ import io.mockk.mockk
 
 private val TITLE: String = "게시판 제목"
 private val DESCRIPTION: String = "게시판 설명"
-private val MIN_READ_LEVEL: Int = 0
-private val MIN_WRITE_LEVEL: Int = 0
+private val MIN_READ_LEVEL: Int = 1
+private val MIN_WRITE_LEVEL: Int = 1
 
 val board:Board = mockk()
 
