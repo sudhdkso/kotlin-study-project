@@ -1,6 +1,5 @@
 package com.study.boardproject.user.controller
 
-import com.study.boardproject.board.user.dto.*
 import com.study.boardproject.user.entity.User
 import com.study.boardproject.user.service.LoginService
 import com.study.boardproject.user.service.UserService
