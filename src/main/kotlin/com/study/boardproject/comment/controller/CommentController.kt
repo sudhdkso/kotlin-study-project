@@ -1,12 +1,13 @@
 package com.study.boardproject.comment.controller
 
+import com.study.boardproject.board.user.entity.User
 import com.study.boardproject.comment.dto.CommentCreateRequestDto
 import com.study.boardproject.comment.dto.CommentRequestDto
 import com.study.boardproject.comment.dto.CommentResponseDto
 import com.study.boardproject.comment.service.CommentService
 import com.study.boardproject.core.annotation.CheckRequestUser
-import com.study.boardproject.core.annotation.LoginUserEmail
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.*
 class CommentController(private val commentService: CommentService) {
 
     @PostMapping
-    fun create(@LoginUserEmail email:String, @RequestBody request: CommentCreateRequestDto) : ResponseEntity<CommentResponseDto> {
-        val response = commentService.save(email, request)
+    fun create(
+        @AuthenticationPrincipal user: User,
+        @RequestBody request: CommentCreateRequestDto) : ResponseEntity<CommentResponseDto> {
+        val response = commentService.save(user, request)
         return ResponseEntity.ok().body(response)
     }
 
