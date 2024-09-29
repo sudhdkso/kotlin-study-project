@@ -1,15 +1,17 @@
 package com.study.boardproject.user.service
 
-import com.study.boardproject.createUser
-import com.study.boardproject.createUserRequest
+import com.study.boardproject.board.user.entity.enums.Level
 import com.study.boardproject.board.user.repository.UserRepository
 import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.createUser
+import com.study.boardproject.createUserRequest
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
+import io.mockk.verify
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -76,5 +78,33 @@ class UserServiceTest : BehaviorSpec({
             }
         }
     }
-}) {
-}
+
+    Given("매니저 레벨의 사용자가") {
+        val manager = createUser(level = Level.MANAGER)
+        val targetUserEmail = "target@example.com"
+        val expectedLevel = Level.LEVEL_2.value
+        val targetUser = createUser(email = targetUserEmail, level = Level.LEVEL_1)
+        every { userService.findUserByEmail(any()) } returns targetUser
+        every { userRepository.save(any()) } returns targetUser
+        When("다른 사용자의 레벨을 변경하려고 하면") {
+            userService.updateUserLevel(manager, targetUserEmail, expectedLevel)
+            Then("성공한다.") {
+                verify(exactly = 1) { userRepository.save(targetUser) }
+            }
+        }
+    }
+
+    Given("매니저 레벨이 아닌 사용자가") {
+        val manager = createUser(level = Level.LEVEL_4)
+        val targetUserEmail = "target@example.com"
+        val expectedLevel = Level.LEVEL_2.value
+
+        When("다른 사용자의 레벨을 변경하려고 하면") {
+            Then("IllegalAccessException가 발생한다.") {
+                shouldThrow<IllegalAccessException> {
+                    userService.updateUserLevel(manager, targetUserEmail, expectedLevel)
+                }.message shouldBe "매니저 권한이 없습니다."
+            }
+        }
+    }
+})
