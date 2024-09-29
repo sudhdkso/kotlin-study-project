@@ -101,7 +101,6 @@ class CommnetServiceTest : BehaviorSpec({
         val comment = createComment(content = previousContent, writer = user)
 
         every { commentRepository.getByCommentId(commentId) } returns comment
-        every { commentRepository.save(any()) } returns updateComment
 
         When("수정하면") {
             val result = commentService.update(commentId, request)

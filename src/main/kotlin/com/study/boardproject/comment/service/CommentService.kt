@@ -48,13 +48,13 @@ class CommentService(
         return post.comments.map { it.toDto() }
     }
 
+    @Transactional
     fun update(commentId: Long, requestDto: CommentRequestDto): CommentResponseDto {
-
         checkContent(requestDto.content)
 
         val comment = commentRepository.getByCommentId(commentId)
         comment.update(requestDto.content)
-        return commentRepository.save(comment).toDto()
+        return comment.toDto()
     }
 
     @Transactional
