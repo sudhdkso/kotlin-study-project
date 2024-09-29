@@ -1,9 +1,9 @@
 package com.study.boardproject.user.service
 
 import com.study.boardproject.createUser
-import com.study.boardproject.board.user.repository.UserRepository
-import com.study.boardproject.board.user.repository.getByEmail
-import com.study.boardproject.board.user.service.UserDetailService
+import com.study.boardproject.user.repository.UserRepository
+import com.study.boardproject.user.repository.getByEmail
+import com.study.boardproject.user.service.UserDetailService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe

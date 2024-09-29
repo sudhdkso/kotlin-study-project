@@ -1,6 +1,6 @@
 package com.study.boardproject.notification.service
 
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 import com.study.boardproject.createComment
 import com.study.boardproject.createPost
 import com.study.boardproject.createUser

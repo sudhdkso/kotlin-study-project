@@ -2,9 +2,9 @@ package com.study.boardproject.post.service
 
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.service.BoardService
-import com.study.boardproject.board.user.entity.User
-import com.study.boardproject.board.user.entity.enums.Level
-import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.user.entity.User
+import com.study.boardproject.user.entity.enums.Level
+import com.study.boardproject.user.service.UserService
 import com.study.boardproject.common.constants.BoardConstants.MAX_CONTENT_LENGTH
 import com.study.boardproject.common.constants.BoardConstants.MAX_TITLE_LENGTH
 import com.study.boardproject.notification.service.NotificationService
@@ -26,7 +26,7 @@ class PostService(
 ) {
 
     @Transactional
-    fun save(user:User, requestDto: PostRequestDto): PostResponseDto {
+    fun save(user: User, requestDto: PostRequestDto): PostResponseDto {
         val board = boardService.findByBoardId(requestDto.boardId)
 
         val accessLevel = board?.minWriteLevel ?: Level.EMPTY.value

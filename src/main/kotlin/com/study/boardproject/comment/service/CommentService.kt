@@ -1,7 +1,7 @@
 package com.study.boardproject.comment.service
 
-import com.study.boardproject.board.user.entity.User
-import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.user.entity.User
+import com.study.boardproject.user.service.UserService
 import com.study.boardproject.comment.dto.CommentCreateRequestDto
 import com.study.boardproject.comment.dto.CommentRequestDto
 import com.study.boardproject.comment.dto.CommentResponseDto

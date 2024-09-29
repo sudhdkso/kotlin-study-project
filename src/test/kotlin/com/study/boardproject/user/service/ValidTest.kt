@@ -1,7 +1,7 @@
 package com.study.boardproject.user.service
 
-import com.study.boardproject.board.user.repository.UserRepository
-import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.user.repository.UserRepository
+import com.study.boardproject.user.service.UserService
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.data.forAll
 import io.kotest.data.row

@@ -3,7 +3,7 @@ package com.study.boardproject
 import com.study.boardproject.post.dto.PostRequestDto
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.post.entity.Post
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 
 private val TITLE: String = "제목"
 private val CONTENT: String = "내용"

@@ -1,9 +1,9 @@
-package com.study.boardproject.board.user.service
+package com.study.boardproject.user.service
 
-import com.study.boardproject.board.user.dto.LoginRequestDto
-import com.study.boardproject.board.user.dto.LoginResponseDto
-import com.study.boardproject.board.user.repository.UserRepository
-import com.study.boardproject.board.user.repository.getByEmail
+import com.study.boardproject.user.dto.LoginRequestDto
+import com.study.boardproject.user.dto.LoginResponseDto
+import com.study.boardproject.user.repository.UserRepository
+import com.study.boardproject.user.repository.getByEmail
 import com.study.boardproject.core.security.TokenProvider
 import jakarta.transaction.Transactional
 import org.springframework.security.authentication.AuthenticationManager

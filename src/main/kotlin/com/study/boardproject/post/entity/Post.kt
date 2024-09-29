@@ -4,7 +4,7 @@ import com.study.boardproject.post.dto.PostRequestDto
 import com.study.boardproject.common.base.BaseTime
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.comment.entity.Comment
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 import com.study.boardproject.common.constants.BoardConstants.EDITABLE_PERIOD_DAYS
 import jakarta.persistence.*
 import java.time.LocalDateTime

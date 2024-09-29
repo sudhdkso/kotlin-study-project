@@ -1,13 +1,13 @@
-package com.study.boardproject.board.user.service
+package com.study.boardproject.user.service
 
-import com.study.boardproject.board.user.dto.UserRequestDto
-import com.study.boardproject.board.user.dto.UserResponseDto
-import com.study.boardproject.board.user.dto.UserUpdateRequestDto
-import com.study.boardproject.board.user.dto.toDto
-import com.study.boardproject.board.user.entity.User
-import com.study.boardproject.board.user.entity.enums.Level
-import com.study.boardproject.board.user.repository.UserRepository
-import com.study.boardproject.board.user.repository.getByEmail
+import com.study.boardproject.user.dto.UserRequestDto
+import com.study.boardproject.user.dto.UserResponseDto
+import com.study.boardproject.user.dto.UserUpdateRequestDto
+import com.study.boardproject.user.dto.toDto
+import com.study.boardproject.user.entity.User
+import com.study.boardproject.user.entity.enums.Level
+import com.study.boardproject.user.repository.UserRepository
+import com.study.boardproject.user.repository.getByEmail
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
@@ -35,7 +35,7 @@ class UserService(
     }
 
     @Transactional
-    fun update(user:User, requestDto: UserUpdateRequestDto) : UserResponseDto{
+    fun update(user: User, requestDto: UserUpdateRequestDto) : UserResponseDto {
         checkUserInput(requestDto.phoneNumber, requestDto.password)
         user.update(requestDto.name, encoder.encode(requestDto.password), requestDto.phoneNumber)
         return user.toDto()

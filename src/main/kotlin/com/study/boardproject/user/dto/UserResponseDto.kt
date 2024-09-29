@@ -1,6 +1,6 @@
-package com.study.boardproject.board.user.dto
+package com.study.boardproject.user.dto
 
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 
 
 data class UserResponseDto(val email: String, val name: String) {

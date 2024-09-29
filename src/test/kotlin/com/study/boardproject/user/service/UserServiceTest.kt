@@ -1,8 +1,8 @@
 package com.study.boardproject.user.service
 
-import com.study.boardproject.board.user.entity.enums.Level
-import com.study.boardproject.board.user.repository.UserRepository
-import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.user.entity.enums.Level
+import com.study.boardproject.user.repository.UserRepository
+import com.study.boardproject.user.service.UserService
 import com.study.boardproject.createUser
 import com.study.boardproject.createUserRequest
 import com.study.boardproject.createUserUpdateRequest

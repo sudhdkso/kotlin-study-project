@@ -1,9 +1,10 @@
-package com.study.boardproject.board.user.controller
+package com.study.boardproject.user.controller
 
 import com.study.boardproject.board.user.dto.*
-import com.study.boardproject.board.user.entity.User
-import com.study.boardproject.board.user.service.LoginService
-import com.study.boardproject.board.user.service.UserService
+import com.study.boardproject.user.entity.User
+import com.study.boardproject.user.service.LoginService
+import com.study.boardproject.user.service.UserService
+import com.study.boardproject.user.dto.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -45,8 +46,8 @@ class UserController(
 
     @PutMapping("/users")
     fun update(
-        @AuthenticationPrincipal user:User,
-        @RequestBody request:UserUpdateRequestDto
+        @AuthenticationPrincipal user: User,
+        @RequestBody request: UserUpdateRequestDto
     ) : ResponseEntity<UserResponseDto>{
         val response = userService.update(user, request)
         return ResponseEntity.ok().body(response)

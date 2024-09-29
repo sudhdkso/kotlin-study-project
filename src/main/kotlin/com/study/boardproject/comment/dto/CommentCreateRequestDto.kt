@@ -1,7 +1,7 @@
 package com.study.boardproject.comment.dto
 
 import com.study.boardproject.comment.entity.Comment
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 import com.study.boardproject.post.entity.Post
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull

@@ -1,6 +1,6 @@
 package com.study.boardproject.notification.entity
 
-import com.study.boardproject.board.user.entity.User
+import com.study.boardproject.user.entity.User
 import jakarta.persistence.*
 import lombok.AccessLevel
 import lombok.Getter

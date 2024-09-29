@@ -1,6 +1,6 @@
 package com.study.boardproject.core.configuration
 
-import com.study.boardproject.board.user.service.UserDetailService
+import com.study.boardproject.user.service.UserDetailService
 import com.study.boardproject.core.security.JwtAuthenticationFilter
 import com.study.boardproject.core.security.TokenProvider
 import org.springframework.context.annotation.Bean
