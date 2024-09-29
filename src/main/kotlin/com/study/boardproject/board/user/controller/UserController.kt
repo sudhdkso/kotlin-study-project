@@ -1,19 +1,13 @@
 package com.study.boardproject.board.user.controller
 
-import com.study.boardproject.board.user.dto.LoginRequestDto
-import com.study.boardproject.board.user.dto.LoginResponseDto
-import com.study.boardproject.board.user.dto.UserRequestDto
-import com.study.boardproject.board.user.dto.UserResponseDto
+import com.study.boardproject.board.user.dto.*
 import com.study.boardproject.board.user.entity.User
 import com.study.boardproject.board.user.service.LoginService
 import com.study.boardproject.board.user.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class UserController(
@@ -47,5 +41,14 @@ class UserController(
         } catch (e: IllegalArgumentException) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }
+    }
+
+    @PutMapping("/users")
+    fun update(
+        @AuthenticationPrincipal user:User,
+        @RequestBody request:UserUpdateRequestDto
+    ) : ResponseEntity<UserResponseDto>{
+        val response = userService.update(user, request)
+        return ResponseEntity.ok().body(response)
     }
 }
