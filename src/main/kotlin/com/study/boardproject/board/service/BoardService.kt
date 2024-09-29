@@ -1,6 +1,9 @@
 package com.study.boardproject.board.service
 
-import com.study.boardproject.board.dto.*
+import com.study.boardproject.board.dto.BoardCreateRequestDto
+import com.study.boardproject.board.dto.BoardResponseDto
+import com.study.boardproject.board.dto.BoardUpdateRequestDto
+import com.study.boardproject.board.dto.toDto
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.repository.BoardRepository
 import com.study.boardproject.board.repository.getByBoardId
@@ -13,9 +16,6 @@ import org.springframework.stereotype.Service
 class BoardService(
     private val boardRepository: BoardRepository
 ) {
-
-    //TODO
-    // -게시판 delete (soft, hard)
 
     fun findByBoardId(boardId: Long): Board {
         return boardRepository.getByBoardId(boardId)
