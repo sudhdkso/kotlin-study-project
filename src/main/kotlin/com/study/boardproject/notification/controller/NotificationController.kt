@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 @RestController
-@RequestMapping("/api/notification")
+@RequestMapping("/api/notifications")
 class NotificationController(private val notificationService: NotificationService) {
 
     @GetMapping("/subscribe/{id}")

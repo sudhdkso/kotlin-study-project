@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/board")
+@RequestMapping("/api/boards")
 class BoardController(private val boardService: BoardService) {
 
     @CheckAccessLevel(requiredLevels = [5])
