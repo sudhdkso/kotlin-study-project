@@ -13,7 +13,6 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.*
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -237,9 +236,9 @@ class PostServiceTest : BehaviorSpec({
                 val result = postService.search(query)
 
                 Then("게시글의 조회수는 정확히 반환되어야 한다") {
-                    assertEquals(2, result.size)
-                    assertEquals(100L, result[0].viewCount)  // 첫 번째 게시글 조회수
-                    assertEquals(200L, result[1].viewCount)  // 두 번째 게시글 조회수
+                    result.size shouldBe 2
+                    result[0].viewCount shouldBe 100L
+                    result[1].viewCount shouldBe 200L
                 }
             }
         }
