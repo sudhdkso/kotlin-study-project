@@ -2,9 +2,6 @@ package com.study.boardproject.post.service
 
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.board.service.BoardService
-import com.study.boardproject.user.entity.User
-import com.study.boardproject.user.entity.enums.Level
-import com.study.boardproject.user.service.UserService
 import com.study.boardproject.common.constants.BoardConstants.MAX_CONTENT_LENGTH
 import com.study.boardproject.common.constants.BoardConstants.MAX_TITLE_LENGTH
 import com.study.boardproject.notification.service.NotificationService
@@ -12,6 +9,10 @@ import com.study.boardproject.post.dto.*
 import com.study.boardproject.post.entity.Post
 import com.study.boardproject.post.repository.PostRepository
 import com.study.boardproject.post.repository.getByPostId
+import com.study.boardproject.user.entity.User
+import com.study.boardproject.user.entity.enums.Level
+import com.study.boardproject.user.service.UserService
+import com.study.boardproject.viewCount.Service.ViewCountService
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -22,7 +23,8 @@ class PostService(
     private val postRepository: PostRepository,
     private val userService: UserService,
     private val notificationService: NotificationService,
-    private val boardService: BoardService
+    private val boardService: BoardService,
+    private val viewCountService: ViewCountService
 ) {
 
     @Transactional
@@ -37,7 +39,7 @@ class PostService(
         val post = postRepository.save(requestDto.toEntity(user, board))
 
         board.addPost(post)
-        return PostResponseDto(post, user.email, user.name)
+        return PostResponseDto(post, 0, user.email, user.name)
     }
 
     fun findByPostId(postId: Long): Post = postRepository.getByPostId(postId)
@@ -52,7 +54,8 @@ class PostService(
         val accessLevel = post.board?.minReadLevel ?: Level.EMPTY.value
         checkAccessLevel(user.level.value, accessLevel)
 
-        return post.toDto()
+        val viewCount = viewCountService.getPostViewCount(postId)
+        return post.toDto(viewCount)
     }
 
     @Transactional
@@ -68,7 +71,9 @@ class PostService(
         }
 
         post.update(requestDto)
-        return post.toDto()
+
+        val viewCount = viewCountService.getPostViewCount(postId)
+        return post.toDto(viewCount)
     }
 
     @Transactional
@@ -80,13 +85,16 @@ class PostService(
 
     fun search(query: String): List<PostResponseDto> {
         val postList = postRepository.searchByTitleOrContent(query)
-        return postList.map { it.toDto() }
+        return postList.map { post ->
+            val viewCount = post.id?.let { viewCountService.getPostViewCount(it) } ?: 0L
+            post.toDto(viewCount)
+        }
     }
 
     @Transactional
-    fun viewCountup(postId: Long) {
+    fun saveViewCount(postId:Long, viewCount:Long){
         val post = findByPostId(postId)
-        post.viewCountUp()
+        post.viewCountUp(viewCount)
     }
 
     fun findBoardWithEditDedlineSoon(): List<Post> {

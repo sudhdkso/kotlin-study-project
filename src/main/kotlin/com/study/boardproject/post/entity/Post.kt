@@ -1,11 +1,11 @@
 package com.study.boardproject.post.entity
 
-import com.study.boardproject.post.dto.PostRequestDto
-import com.study.boardproject.common.base.BaseTime
 import com.study.boardproject.board.entity.Board
 import com.study.boardproject.comment.entity.Comment
-import com.study.boardproject.user.entity.User
+import com.study.boardproject.common.base.BaseTime
 import com.study.boardproject.common.constants.BoardConstants.EDITABLE_PERIOD_DAYS
+import com.study.boardproject.post.dto.PostRequestDto
+import com.study.boardproject.user.entity.User
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -68,8 +68,8 @@ class Post(title: String, content: String, writer: User?, board: Board) : BaseTi
         return daysSinceCreation < EDITABLE_PERIOD_DAYS
     }
 
-    fun viewCountUp(){
-        this.viewCount++
+    fun viewCountUp(count : Long){
+        this.viewCount += count
     }
 
     fun delete() {
