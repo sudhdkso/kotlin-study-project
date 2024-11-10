@@ -13,6 +13,7 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -112,7 +113,7 @@ class PostServiceTest : BehaviorSpec({
 
         every { post.board } returns board
         every { postRepository.save(any()) } returns createPost(title = title)
-        every {viewCountService.getPostViewCount(any())} returns 0L
+        every { viewCountService.getPostViewCount(any()) } returns 0L
         every { postRepository.delete(any()) } just runs
 
         every { post.canEditPost() } returns true
@@ -182,31 +183,90 @@ class PostServiceTest : BehaviorSpec({
 
     }
 
-    Given("사용자 레벨이 읽기 레벨을 충족하는"){
+    Given("사용자 레벨이 읽기 레벨을 충족하는") {
         val user = createUser()
         val postId = 1L
         val content = "Test Content"
-        every {postService.findByPostId(any())} returns createPost(content = content, board = createBoard(minReadLevel = 1))
-        every {viewCountService.getPostViewCount(any())} returns 0L
-        When("조회하려고 할 때"){
+        every { postService.findByPostId(any()) } returns createPost(
+            content = content,
+            board = createBoard(minReadLevel = 1)
+        )
+        every { viewCountService.getPostViewCount(any()) } returns 0L
+        When("조회하려고 할 때") {
             val result = postService.getByPostId(user, postId)
-            Then("성공적으로 조회된다."){
+            Then("성공적으로 조회된다.") {
                 result.content shouldBe content
             }
         }
     }
 
-    Given("사용자 레벨보다 읽기 레벨이 더 높은 게시글을"){
+    Given("사용자 레벨보다 읽기 레벨이 더 높은 게시글을") {
         val user = createUser()
         val postId = 1L
-        every {postService.findByPostId(any())} returns createPost(board = createBoard(minReadLevel = 5))
+        every { postService.findByPostId(any()) } returns createPost(board = createBoard(minReadLevel = 5))
 
-        When("조회하려고 할 때"){
-            Then("IllegalAccessException가 발생한다."){
+        When("조회하려고 할 때") {
+            Then("IllegalAccessException가 발생한다.") {
                 shouldThrow<IllegalAccessException> {
                     postService.getByPostId(user, postId)
                 }.message shouldBe "접근 권한이 없습니다."
             }
         }
     }
+
+    Given("search 메서드") {
+        val query = "test query"
+        val post1 = mockk<Post>(relaxed = true) {
+            every { id } returns 1L
+            every { title } returns "Post 1"
+            every { content } returns "Content 1"
+        }
+        val post2 = mockk<Post>(relaxed = true) {
+            every { id } returns 2L
+            every { title } returns "Post 2"
+            every { content } returns "Content 2"
+        }
+        val postList = listOf(post1, post2)
+
+        And("게시글을 검색하면") {
+            every { postRepository.searchByTitleOrContent(query) } returns postList
+            every { viewCountService.getPostViewCount(1L) } returns 100L
+            every { viewCountService.getPostViewCount(2L) } returns 200L
+
+            When("search 메서드를 호출하면") {
+                val result = postService.search(query)
+
+                Then("게시글의 조회수는 정확히 반환되어야 한다") {
+                    assertEquals(2, result.size)
+                    assertEquals(100L, result[0].viewCount)  // 첫 번째 게시글 조회수
+                    assertEquals(200L, result[1].viewCount)  // 두 번째 게시글 조회수
+                }
+            }
+        }
+    }
+
+    Given("saveViewCount 메서드") {
+        val postId = 1L
+        val viewCount = 10L
+        val post = mockk<Post>(relaxed = true) {
+            every { id } returns postId
+            every { title } returns "Post 1"
+            every { content } returns "Content 1"
+        }
+
+        And("조회수를 저장하려면") {
+            every { postService.findByPostId(postId) } returns post
+            every { post.viewCountUp(viewCount) } just Runs
+
+            When("saveViewCount 메서드를 호출하면") {
+                postService.saveViewCount(postId, viewCount)
+
+                Then("findByPostId와 viewCountUp 메서드가 호출되어야 한다") {
+                    verify { postService.findByPostId(postId) }
+                    verify { post.viewCountUp(viewCount) }
+                }
+            }
+        }
+    }
+
 })
