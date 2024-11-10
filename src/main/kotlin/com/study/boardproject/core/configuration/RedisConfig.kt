@@ -1,7 +1,7 @@
 package com.study.boardproject.core.configuration
 
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.cache.annotation.EnableCaching
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -11,22 +11,17 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer
 
 @Configuration
-@EnableCaching
+@EnableConfigurationProperties(RedisProperties::class)
 class RedisConfig {
-    @Value("\${spring.redis.host}")
-    private val redisHost: String? = null
-
-    @Value("\${spring.redis.port}")
-    private val redisPort = 0
     @Bean
-    fun redisConnectionFactory(): RedisConnectionFactory {
-        return LettuceConnectionFactory(redisHost ?: "localhost", redisPort)
+    fun redisConnectionFactory(redisProperties: RedisProperties): RedisConnectionFactory {
+        return LettuceConnectionFactory(redisProperties.host, redisProperties.port)
     }
 
     @Bean
-    fun redisTemplate(): RedisTemplate<String, Any> {
+    fun redisTemplate(redisConnectionFactory: RedisConnectionFactory): RedisTemplate<String, Any> {
         val redisTemplate = RedisTemplate<String, Any>()
-        redisTemplate.setConnectionFactory(redisConnectionFactory())
+        redisTemplate.setConnectionFactory(redisConnectionFactory)
 
         redisTemplate.keySerializer = StringRedisSerializer()
         redisTemplate.valueSerializer = GenericJackson2JsonRedisSerializer()
@@ -37,3 +32,9 @@ class RedisConfig {
         return redisTemplate
     }
 }
+
+@ConfigurationProperties(prefix = "spring.redis")
+data class RedisProperties(
+    var host: String = "localhost",
+    var port: Int = 6379
+)
