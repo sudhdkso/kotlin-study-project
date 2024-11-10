@@ -18,11 +18,11 @@ data class PostResponseDto(
     val comments: List<CommentResponseDto>
 ) {
 
-    constructor(post: Post, email: String, name: String) : this(
+    constructor(post: Post, viewCount:Long,  email: String, name: String) : this(
         post.id ?: -1,
         post.title ?: "Default Title",
         post.content ?: "Default Content",
-        post.viewCount,
+        post.viewCount + viewCount,
         post.calculateEditableDaysRemaining(),
         post.createdAt ?: LocalDateTime.now(),
         post.modifiedAt ?: LocalDateTime.now(),
@@ -33,8 +33,9 @@ data class PostResponseDto(
 }
 
 
-fun Post.toDto(): PostResponseDto = PostResponseDto(
+fun Post.toDto(viewCount:Long): PostResponseDto = PostResponseDto(
     this,
+    viewCount,
     email = writer?.email ?: "unknown@example.com",
     name = writer?.name ?: "Unknown Writer"
 )

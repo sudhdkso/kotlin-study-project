@@ -9,12 +9,14 @@ import com.study.boardproject.board.repository.BoardRepository
 import com.study.boardproject.board.repository.getByBoardId
 import com.study.boardproject.post.dto.PostResponseDto
 import com.study.boardproject.post.dto.toDto
+import com.study.boardproject.viewCount.Service.ViewCountService
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
 class BoardService(
-    private val boardRepository: BoardRepository
+    private val boardRepository: BoardRepository,
+    private val viewCountService: ViewCountService
 ) {
 
     fun findByBoardId(boardId: Long): Board {
@@ -48,7 +50,10 @@ class BoardService(
 
     fun getPostsByBoard(boardId: Long): List<PostResponseDto> {
         val board = findByBoardId(boardId)
-        return board.posts.map { it.toDto() }
+        return board.posts.map { post ->
+            val viewCount = post.id?.let { viewCountService.getPostViewCount(it) } ?: 0L
+            post.toDto(viewCount)
+        }
     }
 
 

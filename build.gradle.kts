@@ -71,6 +71,8 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 	//aop
 	implementation ("org.springframework.boot:spring-boot-starter-aop")
+	//redis
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 }
 
 //JPA를 위한 설정

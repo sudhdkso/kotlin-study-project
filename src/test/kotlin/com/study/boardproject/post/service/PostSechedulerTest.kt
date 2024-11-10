@@ -2,6 +2,7 @@ package com.study.boardproject.post.service
 
 import com.study.boardproject.createPost
 import com.study.boardproject.notification.service.NotificationService
+import com.study.boardproject.viewCount.Service.ViewCountService
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import io.mockk.mockk
@@ -18,7 +19,8 @@ class PostSechedulerTest() : BehaviorSpec({
     Given("작성한지 9일된 게시글은") {
         val post = createPost()
         val notificationService: NotificationService =  mockk(relaxed = true)
-        val postService: PostService = spyk<PostService>(PostService( mockk(), mockk(), notificationService, mockk()))
+        val viewCountService: ViewCountService = mockk()
+        val postService: PostService = spyk<PostService>(PostService( mockk(), mockk(), notificationService, mockk(), viewCountService))
         val postSecheduler: PostScheduler = PostScheduler(postService)
 
         every { postService.findBoardWithEditDedlineSoon() } returns listOf(post)

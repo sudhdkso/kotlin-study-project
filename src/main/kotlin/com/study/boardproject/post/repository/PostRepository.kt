@@ -17,4 +17,5 @@ interface PostRepository : JpaRepository<Post, Long>, PostRepositoryCustom {
 
     @Query("SELECT b FROM Post b WHERE b.createdAt <= :nineDaysAgo AND b.createdAt > :tenDaysAgo")
     fun findWithEditPeriodImminent(nineDaysAgo: LocalDateTime, tenDaysAgo: LocalDateTime): List<Post>
+
 }

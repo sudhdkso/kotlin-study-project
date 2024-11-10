@@ -21,6 +21,10 @@ spring:
       show_sql: true
       format_sql: true
       highlight_sql: true
+  redis:
+    host: localhost  # Redis 서버 주소
+    port: 6379       # Redis 포트
+    password :
 logging:
   pattern:
     console: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"

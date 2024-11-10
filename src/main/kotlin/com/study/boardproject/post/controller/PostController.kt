@@ -1,11 +1,12 @@
 package com.study.boardproject.post.controller
 
-import com.study.boardproject.user.entity.User
 import com.study.boardproject.core.annotation.CheckRequestUser
 import com.study.boardproject.post.dto.PostListResponseDto
 import com.study.boardproject.post.dto.PostRequestDto
 import com.study.boardproject.post.dto.PostResponseDto
 import com.study.boardproject.post.service.PostService
+import com.study.boardproject.user.entity.User
+import com.study.boardproject.viewCount.Service.ViewCountService
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -23,7 +24,10 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/posts")
 @RestController
 @Validated
-class PostController(private val postService: PostService) {
+class PostController(
+    private val postService: PostService,
+    private val viewCountService: ViewCountService
+) {
 
     @PostMapping
     fun create(@AuthenticationPrincipal user: User, @RequestBody @Valid requestDto: PostRequestDto) : ResponseEntity<PostResponseDto>{
@@ -96,7 +100,7 @@ class PostController(private val postService: PostService) {
 
         if (finalOldCookie != null) {
             if (finalOldCookie.value?.contains("[$postId]") != true) {
-                postService.viewCountup(postId)
+                viewCountService.incrementPostViewCount(postId)
                 val newValue = (finalOldCookie.value ?: "") + "[$postId]"
                 finalOldCookie.value = newValue
                 finalOldCookie.path = "/"
@@ -104,7 +108,7 @@ class PostController(private val postService: PostService) {
                 res.addCookie(finalOldCookie)
             }
         } else {
-            postService.viewCountup(postId)
+            viewCountService.incrementPostViewCount(postId)
             val newCookie = Cookie("postView", "[$postId]")
             newCookie.path = "/"
             newCookie.maxAge = 60 * 60 * 24
