@@ -12,7 +12,6 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.assertEquals
 
 class BoardServiceTest : BehaviorSpec({
     val boardRepository: BoardRepository = mockk(relaxed = true)
@@ -131,9 +130,9 @@ class BoardServiceTest : BehaviorSpec({
                 val result = boardService.getAllBoards()
 
                 Then("게시판 리스트를 반환해야 한다") {
-                    assertEquals(2, result.size)
-                    assertEquals("Board 1", result[0].title)  // 첫 번째 게시판 이름
-                    assertEquals("Board 2", result[1].title)  // 두 번째 게시판 이름
+                    result.size shouldBe 2
+                    result[0].title shouldBe "Board 1"
+                    result[1].title shouldBe "Board 2"
                 }
             }
         }
@@ -167,9 +166,9 @@ class BoardServiceTest : BehaviorSpec({
                 val result = boardService.getPostsByBoard(boardId)
 
                 Then("게시글 리스트와 조회수를 반환해야 한다") {
-                    assertEquals(2, result.size)
-                    assertEquals(100L, result[0].viewCount)
-                    assertEquals(200L, result[1].viewCount)
+                    result.size shouldBe 2
+                    result[0].viewCount shouldBe 100L
+                    result[1].viewCount shouldBe 200L
                 }
             }
         }
