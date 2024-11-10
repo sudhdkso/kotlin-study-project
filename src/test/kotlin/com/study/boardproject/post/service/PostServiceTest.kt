@@ -2,11 +2,12 @@ package com.study.boardproject.post.service
 
 import com.study.boardproject.*
 import com.study.boardproject.board.service.BoardService
-import com.study.boardproject.user.service.UserService
 import com.study.boardproject.notification.service.NotificationService
 import com.study.boardproject.post.entity.Post
 import com.study.boardproject.post.repository.PostRepository
 import com.study.boardproject.post.repository.getByPostId
+import com.study.boardproject.user.service.UserService
+import com.study.boardproject.viewCount.Service.ViewCountService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -23,7 +24,8 @@ class PostServiceTest : BehaviorSpec({
     val userService: UserService = mockk()
     val notificationService: NotificationService = mockk()
     val boardService: BoardService = mockk()
-    val postService = PostService(postRepository, userService, notificationService, boardService)
+    val viewCountService: ViewCountService = mockk()
+    val postService = PostService(postRepository, userService, notificationService, boardService, viewCountService)
 
 
     Given("사용자와 게시글이 모두 유효한 경우") {
@@ -110,6 +112,7 @@ class PostServiceTest : BehaviorSpec({
 
         every { post.board } returns board
         every { postRepository.save(any()) } returns createPost(title = title)
+        every {viewCountService.getPostViewCount(any())} returns 0L
         every { postRepository.delete(any()) } just runs
 
         every { post.canEditPost() } returns true
@@ -184,7 +187,7 @@ class PostServiceTest : BehaviorSpec({
         val postId = 1L
         val content = "Test Content"
         every {postService.findByPostId(any())} returns createPost(content = content, board = createBoard(minReadLevel = 1))
-
+        every {viewCountService.getPostViewCount(any())} returns 0L
         When("조회하려고 할 때"){
             val result = postService.getByPostId(user, postId)
             Then("성공적으로 조회된다."){

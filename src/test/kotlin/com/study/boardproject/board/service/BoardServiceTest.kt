@@ -4,6 +4,7 @@ import com.study.boardproject.board.repository.BoardRepository
 import com.study.boardproject.createBoard
 import com.study.boardproject.createBoardRequest
 import com.study.boardproject.createBoardUpdateRequest
+import com.study.boardproject.viewCount.Service.ViewCountService
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -12,7 +13,8 @@ import io.mockk.mockk
 
 class BoardServiceTest : BehaviorSpec({
     val boardRepository: BoardRepository = mockk(relaxed = true)
-    val boardService: BoardService = BoardService(boardRepository)
+    val viewCountService: ViewCountService = mockk()
+    val boardService = BoardService(boardRepository, viewCountService)
 
     Given("요청하는 정보가 모두 유효할 때") {
         val title = "게시판1"

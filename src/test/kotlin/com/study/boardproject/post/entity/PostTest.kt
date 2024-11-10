@@ -1,7 +1,7 @@
 package com.study.boardproject.post.entity
 
-import com.study.boardproject.createPost
 import com.study.boardproject.board.entity.Board
+import com.study.boardproject.createPost
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.longs.shouldBeExactly
 import io.kotest.matchers.shouldBe
@@ -15,7 +15,7 @@ class PostTest: FunSpec({
         val post = createPost()
         val expected = post.viewCount+1
 
-        post.viewCountUp()
+        post.viewCountUp(1)
 
         test("조회수가 1 증가한다."){
             post.viewCount shouldBeExactly expected
