@@ -40,8 +40,8 @@ class PostController(
         @AuthenticationPrincipal user: User,
         @PathVariable("id")postId: Long, req: HttpServletRequest, res: HttpServletResponse): ResponseEntity<PostResponseDto> {
 
-        val postResponse = postService.getByPostId(user, postId)
         viewCountUp(postId, req, res)
+        val postResponse = postService.getByPostId(user, postId)
         return ResponseEntity.ok().body(postResponse)
     }
 
@@ -116,8 +116,6 @@ class PostController(
         }
 
     }
-
-}
 
 enum class SortCriteria(val sortProperty: String) {
     CREATED_DATE("createdAt"),
